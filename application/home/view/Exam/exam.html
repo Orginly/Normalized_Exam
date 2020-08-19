@@ -1,0 +1,256 @@
+<link rel="stylesheet" href="/static/home/css/exam.css">
+<div id="main" class="auto">
+    <el-row :gutter="15">
+
+        <!--功能导航栏-->
+        <el-col :span="5" class="left">
+            <el-card :body-style="{ padding: '0px' }">
+                <div slot="header" class="clearfix">
+                    <span class="title" style="font-size: 16px">功能导航</span>
+                </div>
+                <el-menu
+                        default-active="2"
+                        class="el-menu-vertical-demo"
+                >
+                    <el-menu-item index="exam" @click="exam">
+                        <i class="el-icon-document"></i>
+                        <span slot="title">我的考试</span>
+                    </el-menu-item>
+                    <el-menu-item index="record" @click="record">
+                        <i class="el-icon-time"></i>
+                        <span slot="title">考试记录</span>
+                    </el-menu-item>
+
+                    <el-menu-item index="exercise" @click="exercise">
+                        <i class="el-icon-edit-outline"></i>
+                        <span slot="title">章节练习</span>
+                    </el-menu-item>
+                </el-menu>
+            </el-card>
+        </el-col>
+        <!--我的考试-->
+        <el-col :span="19" class="right">
+            <div class="hot">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span class="title" id="title">我的考试</span>
+                    </div>
+                    <div class="exam_wrap">
+                        <!--我的考试-->
+                        <div id="exam" class="exam_list">
+                            <ul class="title">
+                                {foreach $paperData as $item}
+                                <li>
+                                    <h4>[<span>{$item.courseName}</span>] {$item.paperName}</h4>
+                                    <div style="margin-top: 20px;">
+                                        <a class="badge">总分：{$item.totalScore}分</a>
+                                        <a class="badge">及格分：{$item.passScore}分</a>
+                                        <a class="badge">时间：{$item.examTime}分钟</a>
+                                        <a href="/index/paper/{$item.id}" style="color: white"><el-button>开始考试</el-button></a>
+                                    </div>
+                                </li>
+                               {/foreach}
+                            </ul>
+                            <div class="block" style="text-align: center;">
+                                <el-pagination
+                                        layout="prev, pager, next"
+                                        :total="10">
+                                </el-pagination>
+                            </div>
+
+                        </div>
+                        <!--考试记录-->
+                        <div id="record" style="display:none;">
+                            <p style="margin-bottom: 20px;text-indent: 1em">您一共完成了1次考试， 平均分为：0分 继续努力吧！ </p>
+                                <el-table
+                                        :data="recordData"
+                                        style="width: 100%;border: 1px solid #e3e3e3"
+                                >
+                                    <el-table-column
+                                            prop="paperName"
+                                            label="答题记录"
+                                            width="350px"
+                                            >
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="examTime"
+                                            label="答题时间">
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="totalTime"
+                                            label="用时">
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="totalScore"
+                                            label="分数">
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="questionErr"
+                                            label="错题数量">
+                                    </el-table-column>
+
+                                </el-table>
+                                <!--分页-->
+                                <div class="block" style="text-align: center;margin-top: 30px">
+                                    <el-pagination
+                                            layout="prev, pager, next"
+                                            :total="10">
+                                    </el-pagination>
+                                </div>
+                        </div>
+                        <!--章节练习-->
+                        <div id="exercise" ref="qwe" class="exam_list" style="display:none;">
+                            <ul class="title">
+                                <li>
+                                    <h4>[<span>软件工程</span>] 第三章练习题</h4>
+                                    <div style="margin-top: 20px;">
+                                        <a class="badge">总分：100分</a>
+                                        <a class="badge">及格分：60分</a>
+                                        <a class="badge">时间：60分钟</a>
+                                        <el-button>开始练习</el-button>
+                                    </div>
+                                </li>
+                                <li>
+                                    <h4>[<span>PHP动态网页设计</span>] 第五章练习题</h4>
+                                    <div style="margin-top: 20px;">
+                                        <a class="badge">总分：100分</a>
+                                        <a class="badge">及格分：60分</a>
+                                        <a class="badge">时间：60分钟</a>
+                                        <el-button>开始考试</el-button>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="block" style="text-align: center;">
+                                <el-pagination
+                                        layout="prev, pager, next"
+                                        :total="50">
+                                </el-pagination>
+                            </div>
+
+                        </div>
+                        <!--成绩单-->
+                        <div id="scoreTotal" style="display:none;height:380px">
+                            <h3 style="text-align: center;margin-bottom: 20px">软件工程 期末测试卷一</h3>
+                            <div style="width: 350px;display: inline-block">
+                                <h1>100分</h1>
+                            </div>
+                            <p>正确率：0% 答卷耗时：1分钟</p><br>
+                            <span>得分详情：</span>
+                                <el-table
+                                        :data="scoreTotalData"
+                                        style="width: 100%;border: 1px solid #e3e3e3"
+                                        >
+                                    <el-table-column
+                                            prop="question"
+                                            label="题型"
+                                            >
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="questionTotal"
+                                            label="总题数"
+                                            >
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="questionYes"
+                                            label="答对题数"
+                                            >
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="score"
+                                            label="得分"
+                                    >
+                                    </el-table-column>
+
+                                </el-table>
+                        </div>
+                    </div>
+                </el-card>
+            </div>
+        </el-col>
+    </el-row>
+</div>
+
+
+</div>
+
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            getURl:'{$Think.get.grade}',
+            title: document.getElementById('title'),
+            recordData: [{
+                answer: '软件工程 期末测试卷一',
+                time: '10',
+                timeCount: '8',
+                score: '99',
+                errCount:'1',
+            }],
+            /*成绩单数据*/
+            scoreTotalData: [{
+                question: '单选题',
+                questionTotal: '10',
+                questionYes: '8',
+                score: '99',
+            }]
+        },
+        methods: {
+            //发送请求获取考试记录的数据
+            getRecordData(){
+              axios.get('/index/examRecord')
+              .then(response => {
+                  if(response.status === 200){
+                      this.recordData = response.data.data
+                  }else{
+                      return this.$message.error(response.data.msg)
+                  }
+              })
+            },
+            exam() {
+                title.innerHTML = '我的考试'
+                document.getElementById('exam').style.display = ''; //移除css样式
+                document.getElementById('record').style.display = 'none';
+                document.getElementById('exercise').style.display = 'none';
+                document.getElementById('scoreTotal').style.display = 'none'
+            },
+            record() {
+                title.innerHTML = '考试记录'
+                document.getElementById('exam').style.display = 'none'
+                document.getElementById('record').style.display = ''
+                document.getElementById('exercise').style.display = 'none'
+                document.getElementById('scoreTotal').style.display = 'none'
+                this.getRecordData()
+            },
+            exercise() {
+                title.innerHTML = '章节练习'
+                document.getElementById('exam').style.display = 'none'
+                document.getElementById('record').style.display = 'none'
+                document.getElementById('exercise').style.display = ''
+                document.getElementById('scoreTotal').style.display = 'none'
+            },
+            /*总成绩页面*/
+            scoreTotal() {
+                title.innerHTML = '成绩单'
+                document.getElementById('exam').style.display = 'none'
+                document.getElementById('record').style.display = 'none'
+                document.getElementById('exercise').style.display = 'none'
+                document.getElementById('scoreTotal').style.display = ''
+            }
+        },
+        watch: {
+            qwe: {
+                deep: true,
+                handler() {
+                    alert(123);
+                }
+
+            }
+        },
+        created(){
+            if(this.getURl = 1){
+                //this.record();
+            }
+        }
+    })
+</script>

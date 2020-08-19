@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理-Normalized考试系统</title>
+    <link rel="stylesheet" href="/static/css/element-index.css">
+    <script src="/static/js/vue.js"></script>
+    <link rel="stylesheet" href="/static/admin/css/common.css">
+    <script src="/static/js/element-index.js"></script>
+    <script src="/static/js/axios.min.js"></script>
+</head>
+<body>
+
+<div class="header_wrap">
+    <div id="header" class="auto">
+        <div class="header_left">
+            <span class="logo" onclick="confirm_index()" style="cursor: pointer">Normalized 考试系统</span>
+        </div>
+        <script>
+            function confirm_index() {
+                location.href = '/index'
+            }
+        </script>
+        <div class="header_right">
+            <span>欢迎  {$Think.session.admin.level ? '超级管理员' : '教师'}  |  {$Think.session.admin.username}
+                <a href="/admin/logout">注销</a></span>
+        </div>
+    </div>
+</div>
+<div style="margin-top: 8px"></div>
+
+<div id="app">
+    <div id="body" class="auto">
+        <el-row :gutter="20">
+            <el-col :span="5">
+                <div id="aside" width="420px">
+                    <!--功能导航栏-->
+                    <el-card :body-style="{ padding: '0px' }">
+                        <div slot="header" class="clearfix">
+                            <span class="title" style="font-size: 16px">功能导航</span>
+                        </div>
+                        <el-menu
+                                default-active="2"
+                                class="el-menu-vertical-demo"
+                                unique-opened
+                                :open="1"
+                        >
+                            <el-submenu index="1">
+                                <template slot="title">
+                                    <i class="el-icon-location"></i>
+                                    <span>考试模块</span>
+                                </template>
+                                <a href="/admin/index"><el-menu-item index="1-1">试题管理</el-menu-item></a>
+                                <a href="/admin/course"><el-menu-item index="1-2">科目管理</el-menu-item></a>
+                            </el-submenu>
+                            <el-submenu index="2">
+                                <template slot="title">
+                                    <i class="el-icon-location"></i>
+                                    <span>用户模块</span>
+                                </template>
+                                <a href="/admin/student"><el-menu-item index="2-1">学生管理</el-menu-item></a>
+                                <a href="/admin/teacher"><el-menu-item index="2-2">老师管理</el-menu-item></a>
+                            </el-submenu>
+                            <el-submenu index="3">
+                                <template slot="title">
+                                    <i class="el-icon-location"></i>
+                                    <span>要点模块</span>
+                                </template>
+                                <a href="/admin/news"><el-menu-item index="3-1">要点管理</el-menu-item></a>
+                                <a href="/admin/newAdd"><el-menu-item index="3-2">添加要点</el-menu-item></a>
+                            </el-submenu>
+
+
+                        </el-menu>
+                    </el-card>
+                </div>
+            </el-col>
+            <el-col :span="19">
+                <div id="main">
+                    <div class="hot">
+                        {__CONTENT__}
+
+</body>
+</html>

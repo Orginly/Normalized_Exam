@@ -1,0 +1,311 @@
+<link rel="stylesheet" href="/static/home/css/index.css">
+
+<!--登录弹框-->
+<el-dialog
+        title="用户登录"
+        :visible.sync="dialogLoginShow"
+        width="650px"
+        :close-on-click-modal="false"
+        :destroy-on-close="true">
+    <el-form
+            class="demo-ruleForm"
+            status-icon
+            :model="loginForm"
+            :rules="registerRules"
+            label-width="145px">
+        <el-form-item label="学号：" prop="studentId">
+            <el-input v-model="loginForm.studentId" autocomplete="on"></el-input>
+        </el-form-item>
+        <el-form-item label="密码：" prop="password">
+            <el-input v-model="loginForm.password" type="password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="验证码："  class="vcode_input" prop="captcha">
+            <el-input v-model="loginForm.captcha"  autocomplete="off"></el-input>
+            <div class="verifycode">
+                <img src="/index/verify" @click="refreshVerify" ref="verify" alt="">
+            </div>
+        </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogLoginShow = false">取 消</el-button>
+        <el-button type="primary" @click="loginPost">确 定</el-button>
+    </div>
+</el-dialog>
+<!--注册弹框-->
+<el-dialog
+        title="学生注册"
+        :visible.sync="dialogRegisterShow"
+        width="650px"
+        :close-on-click-modal="false"
+        :destroy-on-close="true"
+>
+    <el-form
+            class="demo-ruleForm"
+            status-icon
+            label-width="145px"
+            :model="registerForm"
+            :rules="registerRules"
+            ref="registerRules">
+        <el-form-item label="学号：" prop="studentId">
+            <el-input v-model="registerForm.studentId"></el-input>
+        </el-form-item>
+        <el-form-item label="密码：" prop="password">
+            <el-input v-model="registerForm.password" type="password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码：" prop="confirm_password">
+            <el-input v-model="registerForm.confirm_password" type="password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名：" prop="username">
+            <el-input v-model="registerForm.username"
+                      autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="所在学校：">
+            <el-input v-model="registerForm.edu" placeholder="广西理工职业技术学院" :disabled="true"
+                      autocomplete="off"></el-input>
+        </el-form-item>
+        </el-form-item>
+        <el-form-item label="验证码：" class="vcode_input" prop="captcha">
+            <el-input v-model="registerForm.captcha" autocomplete="off"></el-input>
+            <div class="verifycode">
+                <img src="/index/verify" ref="verify" @click="refreshVerify" alt="">
+            </div>
+        </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogRegisterShow = false">取 消</el-button>
+        <el-button type="primary" @click="registerPost">确 定</el-button>
+    </div>
+</el-dialog>
+
+
+<!--内容页-->
+<div id="main" class="auto">
+    <el-row :gutter="20">
+        <!--左边内容页 -->
+        <el-col :span="17" class="left">
+            <!--走马灯-->
+            <div class="content">
+                <el-card :body-style="{ padding: '0' }">
+                    <el-carousel :interval="5000" arrow="always">
+                        <el-carousel-item>
+                            <img src="/static/home/images/banner1.jpg" width="949" height="300" alt="">
+                        </el-carousel-item>
+                        <el-carousel-item>
+                            <img src="/static/home/images/banner2.jpg" width="949" height="300" alt="">
+                        </el-carousel-item>
+                        <el-carousel-item>
+                            <img src="/static/home/images/banner3.jpg" width="949" height="300" alt="">
+                        </el-carousel-item>
+                    </el-carousel>
+                </el-card>
+
+            </div>
+
+
+            <div style="margin-top: 14px"></div>
+            <!--最新课程-->
+            <div class="course">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span class="title">最新课程</span>
+                        <div style="float: right; padding: 3px 0" class="a_hover">
+                            <a href="/index/course">更多</a>
+                        </div>
+                    </div>
+                    <div class="box">
+                        {foreach $data as $item}
+                        <div class="box_img">
+                            <a @click="courseMsgBox">
+                                <img src="{$item.logo}" alt="">
+                                <div style="padding: 14px">
+                                    <span>{$item.courseName}</span>
+                                </div>
+                            </a>
+                        </div>
+                        {/foreach}
+                    </div>
+
+
+                </el-card>
+            </div>
+            <!--考试要点-->
+            <div class="hot">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span class="title">考试要点</span>
+                        <div style="float: right; padding: 3px 0" class="a_hover">
+                            <a href="../home/course.php">更多</a>
+                        </div>
+                    </div>
+                    <div class="hot_wrap">
+                        {foreach $new as $item}
+                        <a href="/index/news/?id={$item.id}" class="hot_body">
+                            <div class="hot_title">
+                                <span>{$item.title}</span>
+                            </div>
+                            <div class="hot_content">
+                                <p>{$item.desc}</p>
+                            </div>
+                            <span class="time">{$item.createTime}</span>
+                        </a>
+                        {/foreach}
+                    </div>
+                </el-card>
+            </div>
+        </el-col>
+        <!--右边 卡片 -->
+        <el-col :span="7" class="right">
+            <!--网站公告-->
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span class="title">网站公告</span>
+                </div>
+                <div class="box_card a_hover">
+                    <ul>
+                        <li><a href="#">PHP考试系统</a></li>
+                        <li><a href="#">JAVA考试系统</a></li>
+                        <li><a href="#">网站使用帮助</a></li>
+                    </ul>
+                </div>
+            </el-card>
+
+            <!--使用交流-->
+            <el-card class="box-card help">
+                <div slot="header" class="clearfix">
+                    <span class="title">使用交流</span>
+                </div>
+                <div class="help_text">
+                    <span>在线考试系统</span><br/>
+                    <span>首页：<a href="/index">localhost/index.php</a></span><br>
+                    <span>后台首面：<a href="/admin">localhost/admin/index.php</a></span><br>
+                    <span>数据库：<a href="/phpmyadmin">localhost/phpmyadmin</a></span><br><br>
+                    <span>注意事项：</span><br>
+                    <span>1、首次打开需要将exam.sql文件导入到MySql数据库</span><br>
+                    <span>2、修改/inc/database.php文件中的数据库配置</span><br>
+                </div>
+
+            </el-card>
+
+            <!--友情连接-->
+            <el-card class="box-card" style="margin-top: 18px">
+                <div slot="header" class="clearfix">
+                    <span class="title">友情链接</span>
+                </div>
+                <div class="box_card a_hover">
+                    <ul>
+                        <li><a href="#">PHP中文网</a></li>
+                        <li><a href="#">我爱学习网</a></li>
+                        <li><a href="#">Element-UI</a></li>
+                    </ul>
+                </div>
+            </el-card>
+        </el-col>
+    </el-row>
+</div>
+
+<!--vue app 的div闭合标签-->
+</div>
+<script>
+
+    let app = new Vue({
+        el: '#app',
+        data: {
+            /*之后所有需要登录的地方都会跳转到首页然后才会跳出dialog*/
+            dialogLoginShow: false,
+            loginForm: {
+                studentId: '',
+            },
+            /*注册*/
+            dialogRegisterShow: false,
+            registerForm: {
+                studentId: '',
+                edu: '广西理工职业技术学院',
+            },
+            /*注册表单验证规则*/
+            registerRules: {
+                studentId: [
+                    {required: true, message: '请输入学号', trigger: 'blur'},
+                    {min: 8, max: 15, message: '学号长度为在 8 到 15 个数字', trigger: 'blur'}
+                ],
+                password: [
+                    {required: true, message: '请输入密码', trigger: 'blur'},
+                    {min: 6, max: 32, message: '密码长度为在 6 到 32 个字符', trigger: 'blur'}
+                ],
+                username: [
+                    {required: true, message: '请输入名字', trigger: 'blur'}
+                ],
+                confirm_password: [
+                    {required: true, message: '请重新输入密码', trigger: 'blur'},
+                ],
+                vcode: [
+                    {required: true, message: '请输入验证码', trigger: 'blur'},
+                ]
+            },
+        },
+        methods: {
+            loginPost() {
+                console.log(this.loginForm)
+                axios.post('/index/login', this.loginForm)
+                    .then(response => {
+                        console.log(response)
+                        let {status, data} = response
+                        if (status === 200) {
+                            console.log(response);
+                            this.dialogLoginShow = false
+                            this.$message.success('登录成功,' + data.username + '欢迎回来')
+                            setTimeout(function () {
+                                location.reload();
+                            }, 600)
+                        } else {
+                            this.refreshVerify()
+                            this.$message.error(data.msg)
+                        }
+                    })
+            },
+            /*提交注册表单*/
+            registerPost() {
+                console.log(this.registerForm)
+                axios.post('/index/register', this.registerForm)
+                    .then(response => {
+                        console.log(response)
+                        let {status, data} = response
+                        if (status === 200) {
+                            this.$message.success('恭喜你，注册成功')
+                            this.dialogRegisterShow = false
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500)
+                        } else {
+                            this.refreshVerify()
+                            this.$message.error('错了喔,' + data.msg);
+                        }
+                    })
+            },
+            // 刷新验证码
+            refreshVerify() {
+                this.$refs.verify.src = 'index/verify'
+            },
+            courseMsgBox(){
+                this.$confirm('你还未开通次课程, 您是否需要免费开通?', '提示', {
+                    confirmButtonText: '开通',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '开通课程成功!'
+                    });
+                    setTimeout(function () {
+                        location.href = '/index/exam'
+                    },700)
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消开通课程'
+                    });
+                });
+            }
+        }
+    })
+</script>

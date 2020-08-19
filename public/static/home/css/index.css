@@ -1,0 +1,95 @@
+/*登录窗口input*/
+.el-dialog__body {
+    text-align: center;
+    padding: 40px 20px 30px;
+}
+.el-input__inner{
+    font-size: 18px;
+    height: 44px;
+    width: 400px;
+}
+.vcode_input .el-input__inner {
+    width: 171px;
+    position: relative;
+    bottom: 9px;
+}
+.vcode_input .el-input{
+    display: inline-block;
+    width: 211px;
+    position: relative;
+    left: -76px;
+    top: -15px;
+}
+.el-form-item__label {
+    font-size: 17px;
+    color: #333333;
+}
+.el-input {
+    left: -33px;
+}
+.el-dialog__header {
+    padding: 35px 20px 25px;
+    border-bottom: 1px solid #ebe2e2;
+}
+.verifycode{
+    display: inline-block;
+}
+.verifycode img{
+    width: 138px;
+    height: 50px;
+    position: relative;
+    left: -45px;
+    bottom: 1px;
+}
+
+.right .help_text a {
+    color: #333333;
+
+    text-decoration: none;
+}
+
+.right .help {
+    font-size: 17px;
+
+    margin-top: 17px;
+}
+
+.right .help_text span {
+    padding: 10px 8px;
+    display: inline-block;
+}
+
+.right .help_text a:hover {
+    color: #0e84b5;
+}
+
+/*最新课程*/
+/*定义一个父类 然后选择子类中的最后一个类*/
+.box .box_img:last-child {
+    border-right: 0px;
+}
+
+
+/*考试要点*/
+.hot {
+    margin-top: 17px;
+}
+
+
+/*element ui*/
+.el-carousel__item h3 {
+    color: #475669;
+    font-size: 18px;
+    opacity: 0.75;
+    line-height: 300px;
+    margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+    background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n+1) {
+    background-color: #DCDFE6;
+}
+

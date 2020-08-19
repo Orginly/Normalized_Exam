@@ -1,0 +1,245 @@
+{__NOLAYOUT__}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/element-index.css">
+    <link rel="stylesheet" href="/static/home/css/common.css">
+    <script src="/static/js/vue.js"></script>
+    <script src="/static/js/element-index.js"></script>
+    <script src="/static/js/axios.min.js"></script>
+    <link rel="stylesheet" href="/static/home/css/paper.css">
+    <title>在线考试系统</title>
+</head>
+
+<body>
+
+<div id="app">
+    <div class="header_wrap">
+        <div id="header" class="auto">
+            <div class="logo">
+                <h2>软件工程期末测试卷 一</h2>
+            </div>
+            <div class="header_right">
+                <span id="timeDown" style="font-weight: unset;font-size: 19px"></span>
+                <a class="btn_a" @click="onSubmit()">交卷</a>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top: 90px"></div>
+
+    <div id="main" class="auto">
+        <el-row :gutter="40">
+            <el-col :span="6" class="left">
+                <el-card class="box-card" style="margin-top: 1px">
+                    <div slot="header" class="clearfix">
+                        <span class="title" style="font-size: 16px">一、单选题</span>
+                    </div>
+                    <div>
+                        {for start="1" end="$singleCount + 1" step="1" name="i"}
+                        <a href="#single_{$i}" class="btn">{$i}</a>
+                        {/for}
+                        </ul>
+                    </div>
+                </el-card>
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span class="title" style="font-size: 16px">二、多选题</span>
+                    </div>
+                    <div>
+                        <ul>
+                            <li>
+                                {for start="1" end="$multipleCount + 1" step="1" name="i"}
+                                <a href="#multiple_{$i}" class="btn">{$i}</a>
+                                {/for}
+                            </li>
+                        </ul>
+                    </div>
+                </el-card>
+                <!--判断题-->
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span class="title" style="font-size: 16px">三、判断题</span>
+                    </div>
+                    <div>
+                        <ul>
+                            <li>
+                                {for start="1" end="$judgmentCount + 1" step="1" name="i"}
+                                <a href="#judgment_{$i}" class="btn">{$i}</a>
+                                {/for}
+                            </li>
+                        </ul>
+                    </div>
+                </el-card>
+
+            </el-col>
+
+            <!--右边题目内容-->
+            <el-col :span="18" class="right">
+                <!--表单-->
+                <form action="" method="post" ref="formData">
+                    <!--单选大题-->
+                    <el-card>
+                        <div slot="header" class="clearfix">
+                            <span class="title" style="font-size: 16px">单选题 {$singleTotal}分</span>
+                        </div>
+
+                        <!--题目-->
+                        {foreach $single as $key => $item}
+                        <el-card class="box-card" id="single_{$key+1}">
+                            <div slot="header" class="clearfix">
+                                <span class="title" style="font-size: 16px">第 {$key + 1} 题</span>
+                            </div>
+                            <div class="topic">
+                                <ul>
+                                    <li><p>{$item.title}</p></li>
+                                    <el-divider></el-divider>
+                                    <li>
+                                        <p>A、{$item.option->A}</p>
+                                        <p>B、{$item.option->B}</p>
+                                        <p>C、{$item.option->C}</p>
+                                        <p>D、{$item.option->D}</p>
+                                    </li>
+                                    <el-divider></el-divider>
+                                    <li>
+                                        <input type="radio" name="singleOption[{$item.id}]" value="A"><span>A</span>
+                                        <input type="radio" name="singleOption[{$item.id}]" value="B"><span>B</span>
+                                        <input type="radio" name="singleOption[{$item.id}]" value="C"><span>C</span>
+                                        <input type="radio" name="singleOption[{$item.id}]" value="D"><span>D</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </el-card>
+                        {/foreach}
+
+                    </el-card>
+                    <!--多选大题-->
+                    <el-card style="margin-top: 15px">
+                        <div slot="header" class="clearfix">
+                            <span class="title" style="font-size: 16px">多选题 {$multipleTotal}分</span>
+                        </div>
+
+                        <!--题目-->
+                        {foreach $multiple as $key => $item}
+                        <el-card class="box-card" id="multiple_{$key+1}">
+                            <div slot="header" class="clearfix">
+                                <span class="title" style="font-size: 16px">第 {$key + 1} 题</span>
+                            </div>
+                            <div class="topic">
+                                <ul>
+                                    <li><p>{$item.title}</p></li>
+                                    <el-divider></el-divider>
+                                    <li>
+                                        <p>A、{$item.option->A}</p>
+                                        <p>B、{$item.option->B}</p>
+                                        <p>C、{$item.option->C}</p>
+                                        <p>D、{$item.option->D}</p>
+                                    </li>
+                                    <el-divider></el-divider>
+                                    <li>
+                                        <input type="checkbox" name="multipleOption_{$item.id}[]" value="A"><span>A</span>
+                                        <input type="checkbox" name="multipleOption_{$item.id}[]" value="B"><span>B</span>
+                                        <input type="checkbox" name="multipleOption_{$item.id}[]" value="C"><span>C</span>
+                                        <input type="checkbox" name="multipleOption_{$item.id}[]" value="D"><span>D</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </el-card>
+                        {/foreach}
+
+                    </el-card>
+                    <!--判断大题-->
+                    <el-card>
+                        <div slot="header" class="clearfix">
+                            <span class="title" style="font-size: 16px">判断题 {$judgmentTotal}分</span>
+                        </div>
+
+                        <!--题目-->
+                        {foreach $judgment as $key => $item}
+                        <el-card class="box-card" id="judgment_{$key+1}">
+                            <div slot="header" class="clearfix">
+                                <span class="title" style="font-size: 16px">第 {$key + 1} 题</span>
+                            </div>
+                            <div class="topic">
+                                <ul>
+                                    <li><p>{$item.title}</p></li>
+                                    <el-divider></el-divider>
+                                    <li>
+                                        <input type="radio" name="judgmentOption[{$item.id}]" value="true"><span>对</span>
+                                        <input type="radio" name="judgmentOption[{$item.id}]" value="false"><span>错</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </el-card>
+                        {/foreach}
+
+                    </el-card>
+                    <input type="hidden" value="" name="totalTime" id="totalTime">
+                </form>
+            </el-col>
+        </el-row>
+    </div>
+
+    <div id="footer">
+        <div class=" footer_title">在线考试系统</div>
+        <div class="footer_powered">Powered by 冯仁贵 ©2020 18计网一班</div>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            radio: 3,
+        },
+        methods:{
+          onSubmit(){
+              /*点击交卷前把已用时间保存下来*/
+              let time = {$paper.examTime} * 60
+              let totalTime = Math.ceil((time - window.time) / 60)
+              document.getElementById('totalTime').value = totalTime
+              /*通过ref提交表单*/
+              this.$refs.formData.submit()
+          },
+            /*到计时*/
+            down(){
+                /*设置倒计时 */
+                window.onload = function () {
+                    let timeDown = document.getElementById('timeDown')
+                    /*设置循环定时器*/
+                    this.time = {$paper.examTime} * 60
+                    let countDown = setInterval(function () {
+                        //console.log(this.time)
+                        this.time = this.time - 1
+                        let minute = parseInt(this.time / 60); //剩余分钟
+                        let second = this.time % 60  //剩余秒数
+                        timeDown.innerHTML = '时间还剩 ' + minute + '分' + second + '秒'
+
+                        //时间到 结束
+                        if (this.time == 0) {
+                            //清除定时器
+                            window.clearInterval(countDown)
+                            alert('时间结束自动交卷')
+                            this.$refs.formData.submit()
+                        }
+                    }, 1000)
+
+                }
+            }
+        },
+        created() {
+          this.down()
+        }
+    })
+</script>
+
+<!--倒计时-->
+<script>
+
+</script>
+
+
+</body>
+
+</html>

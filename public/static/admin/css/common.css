@@ -1,0 +1,100 @@
+* {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+a{
+    color: #333333;
+    text-decoration: none;
+}
+body {
+    background-color: #e9eaed;
+}
+ul li{
+    list-style: none;
+}
+.auto {
+    width: 1350px;
+    margin: 0 auto;
+}
+
+
+/*表格样式*/
+.el-table{
+    font-size: 16px;
+}
+.el-button--mini, .el-button--small {
+    font-size: 15px;
+}
+.el-input--mini .el-input__inner {
+    height: 36px;
+    font-size: 14px;
+    line-height: 28px;
+}
+.el-pager li {
+    padding: 0 18px;
+    font-size: 15px;
+}
+.el-table--enable-row-transition .el-table__body td {
+    -webkit-transition: background-color .25s ease;
+    transition: background-color .25s ease;
+    padding: 22px 0;
+}
+
+/*elementUi */
+.header_wrap {
+    color: #e7e7e7;
+    width: 100%;
+    position: relative;
+    top: 0;
+    height: 65px;
+    font-size: 16px;
+    /*background-color: #409eff;*/
+    background-color: #333333;
+    /*color: rgb(255, 255, 255);*/
+    z-index: 10;
+    display: inline-block;
+    line-height: 65px;
+    text-align: center;
+}
+
+.header_left{
+    float: left;
+    display: inline-block;
+    background-color: #333333;
+}
+.header_left .logo{
+    float: left;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.header_right{
+    float: right;
+    font-size: 17px;
+    display: inline-block;
+    background-color: #333333;
+    height: 65px;
+    width: 275px;
+}
+.header_right a {
+    text-decoration: none;
+    /*color: rgb(245, 244, 244);*/
+    cursor: pointer;
+    font-size: 18px;
+    color: #e7e7e7;
+
+}
+
+.el-menu{
+    border-radius: 5px;
+    border: 0;
+    position: unset;
+}
+
+
+
+
+
+
+

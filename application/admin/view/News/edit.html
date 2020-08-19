@@ -1,0 +1,308 @@
+{__NOLAYOUT__}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理-Normalized考试系统</title>
+    <link rel="stylesheet" href="/static/css/element-index.css">
+    <script src="/static/js/vue.js"></script>
+    <link rel="stylesheet" href="/static/admin/css/common.css">
+    <script src="/static/js/element-index.js"></script>
+    <script src="/static/uedit/ueditor.config.js"></script>
+    <script src="/static/uedit/ueditor.all.min.js"></script>
+    <script src="/static/uedit/zh-cn.js"></script>
+    <script src="/static/js/axios.min.js"></script>
+</head>
+<body>
+
+<div class="header_wrap">
+    <div id="header" class="auto">
+        <div class="header_left">
+            <span class="logo">Normalized 考试系统</span>
+        </div>
+        <div class="header_right">
+            <span>欢迎  {$Think.session.admin.level ? '超级管理员' : '教师'}  |  {$Think.session.admin.username}
+                <a href="/admin/logout">注销</a></span>
+        </div>
+    </div>
+</div>
+<div style="margin-top: 8px"></div>
+
+<div id="app">
+    <div id="body" class="auto">
+        <el-row :gutter="20">
+            <el-col :span="5">
+                <div id="aside" width="420px">
+                    <!--功能导航栏-->
+                    <el-card :body-style="{ padding: '0px' }">
+                        <div slot="header" class="clearfix">
+                            <span class="title" style="font-size: 16px">功能导航</span>
+                        </div>
+                        <el-menu
+                                default-active="2"
+                                class="el-menu-vertical-demo"
+                                unique-opened
+                                :open="1"
+                        >
+                            <el-submenu index="1">
+                                <template slot="title">
+                                    <i class="el-icon-location"></i>
+                                    <span>考试模块</span>
+                                </template>
+                                <a href="/admin/index"><el-menu-item index="1-1">试题管理</el-menu-item></a>
+                                <a href="/admin/course"><el-menu-item index="1-2">科目管理</el-menu-item></a>
+                            </el-submenu>
+                            <el-submenu index="2">
+                                <template slot="title">
+                                    <i class="el-icon-location"></i>
+                                    <span>用户模块</span>
+                                </template>
+                                <a href="/admin/student"><el-menu-item index="2-1">学生管理</el-menu-item></a>
+                                <a href="/admin/teacher"><el-menu-item index="2-2">老师管理</el-menu-item></a>
+                            </el-submenu>
+                            <el-submenu index="3">
+                                <template slot="title">
+                                    <i class="el-icon-location"></i>
+                                    <span>要点模块</span>
+                                </template>
+                                <a href="/admin/news"><el-menu-item index="3-1">要点管理</el-menu-item></a>
+                                <a href="/admin/newAdd"><el-menu-item index="3-2">添加要点</el-menu-item></a>
+                            </el-submenu>
+
+
+                        </el-menu>
+                    </el-card>
+                </div>
+            </el-col>
+            <el-col :span="19">
+                <div id="main">
+                    <div class="hot">
+<el-card class="box-card">
+    <div slot="header" class="clearfix">
+        <span class="title" id="title">修改要点</span>
+    </div>
+    <div class="box_wrap">
+        <div class="box_body">
+            <el-form ref="form" :model="newForm" label-width="80px" style="padding: 25px 68px 0 10px">
+                <el-form-item label="标题">
+                    <el-input v-model="newForm.title"></el-input>
+                </el-form-item>
+                <el-form-item label="课程" style="display: inline-block">
+                    <el-select v-model="newForm.belongCourseId" placeholder="请选择课程">
+                        <template v-for="item in courseData">
+                            <el-option  :label="item.courseName" :value="item.id"></el-option>
+                        </template>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="作者" style="display: inline-block">
+                    <el-input v-model="newForm.author"></el-input>
+                </el-form-item>
+
+                <el-form-item label="内容">
+                    <div>
+                        <script id="editor" type="text/plain" style="height:500px;"></script>
+                    </div>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="onSubmit">立即发布</el-button>
+                    <el-button>取消</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </div>
+</el-card>
+
+<!--以下闭合标签为layout-->
+</div>
+</div>
+</el-col>
+</el-row>
+</div>
+</div>
+
+</body>
+</html>
+
+<script type="text/javascript">
+    //实例化编辑器
+    //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+    var ue = UE.getEditor('editor');
+
+
+    function isFocus(e){
+        alert(UE.getEditor('editor').isFocus());
+        UE.dom.domUtils.preventDefault(e)
+    }
+    function setblur(e){
+        UE.getEditor('editor').blur();
+        UE.dom.domUtils.preventDefault(e)
+    }
+    function insertHtml() {
+        var value = prompt('插入html代码', '');
+        UE.getEditor('editor').execCommand('insertHtml', value)
+    }
+    function createEditor() {
+        enableBtn();
+        UE.getEditor('editor');
+    }
+    function getAllHtml() {
+        alert(UE.getEditor('editor').getAllHtml())
+    }
+    function getContent() {
+        var arr = [];
+        arr.push(UE.getEditor('editor').getContent());
+        //alert(arr.join("\n"));
+        return arr.join("\n")
+    }
+    function getPlainTxt() {
+        var arr = [];
+        arr.push("使用editor.getPlainTxt()方法可以获得编辑器的带格式的纯文本内容");
+        arr.push("内容为：");
+        arr.push(UE.getEditor('editor').getPlainTxt());
+        alert(arr.join('\n'))
+    }
+    function setContent(isAppendTo,content) {
+        var arr = [];
+        //arr.push("使用editor.setContent('欢迎使用ueditor')方法可以设置编辑器的内容");
+        UE.getEditor('editor').setContent(content, isAppendTo);
+        //alert(arr.join("\n"));
+    }
+    function setDisabled() {
+        UE.getEditor('editor').setDisabled('fullscreen');
+        disableBtn("enable");
+    }
+
+    function setEnabled() {
+        UE.getEditor('editor').setEnabled();
+        enableBtn();
+    }
+
+    function getText() {
+        //当你点击按钮时编辑区域已经失去了焦点，如果直接用getText将不会得到内容，所以要在选回来，然后取得内容
+        var range = UE.getEditor('editor').selection.getRange();
+        range.select();
+        var txt = UE.getEditor('editor').selection.getText();
+        alert(txt)
+    }
+
+    function getContentTxt() {
+        var arr = [];
+        arr.push("使用editor.getContentTxt()方法可以获得编辑器的纯文本内容");
+        arr.push("编辑器的纯文本内容为：");
+        arr.push(UE.getEditor('editor').getContentTxt());
+        // alert(arr.join("\n"));
+
+    }
+    function hasContent() {
+        var arr = [];
+        arr.push("使用editor.hasContents()方法判断编辑器里是否有内容");
+        arr.push("判断结果为：");
+        arr.push(UE.getEditor('editor').hasContents());
+        alert(arr.join("\n"));
+    }
+    function setFocus() {
+        UE.getEditor('editor').focus();
+    }
+    function deleteEditor() {
+        disableBtn();
+        UE.getEditor('editor').destroy();
+    }
+    function disableBtn(str) {
+        var div = document.getElementById('btns');
+        var btns = UE.dom.domUtils.getElementsByTagName(div, "button");
+        for (var i = 0, btn; btn = btns[i++];) {
+            if (btn.id == str) {
+                UE.dom.domUtils.removeAttributes(btn, ["disabled"]);
+            } else {
+                btn.setAttribute("disabled", "true");
+            }
+        }
+    }
+    function enableBtn() {
+        var div = document.getElementById('btns');
+        var btns = UE.dom.domUtils.getElementsByTagName(div, "button");
+        for (var i = 0, btn; btn = btns[i++];) {
+            UE.dom.domUtils.removeAttributes(btn, ["disabled"]);
+        }
+    }
+
+    function getLocalData () {
+        alert(UE.getEditor('editor').execCommand( "getlocaldata" ));
+    }
+
+    function clearLocalData () {
+        UE.getEditor('editor').execCommand( "clearlocaldata" );
+        alert("已清空草稿箱")
+    }
+</script>
+
+
+<script>
+
+    let app = new Vue({
+        el: '#app',
+        data: {
+            id:'{$id}',
+            newForm: {
+            },
+            courseData:{
+
+            }
+        },
+        methods: {
+            onSubmit() {
+                this.newForm.content = getContent()
+                /*发送post请求添加数据*/
+                axios.put('/admin/newseditdata',this.newForm)
+                .then(response => {
+                    if(response.status === 200){
+                        this.$message.success(response.data.msg)
+                        setTimeout(function () {
+                            location.href = '/admin/news'
+                        },700)
+                    }else{
+                        return this.$message.error(response.data.msg)
+                    }
+                })
+            },
+            /*获取科目信息*/
+            getCourseData(){
+                axios.get('/admin/getcourse')
+                .then(response => {
+                    if(response.status === 200){
+                        this.courseData = response.data.data
+                    }
+                })
+            },
+            /*获取原数据*/
+            getNewsData(){
+                axios.get('/admin/newseditdata/'+this.id)
+                    .then(response => {
+                        if(response.status === 200){
+                            this.newForm = response.data.data
+                            /*外部js方法在vue初始化的时候无法调用*/
+                            setContent(response.data.data.content,response.data.data.content)
+                        }else{
+                            this.$message.error(response.data.msg)
+                        }
+                    })
+            },
+        },
+        created(){
+            this.getCourseData()
+            //this.getNewsData()
+        },
+        mounted(){
+            /*把vue的方法挂在在 window 对象中 就可以在外部使用*/
+            window.getNewsData = this.getNewsData
+        }
+    })
+</script>
+
+<script>
+    window.onload = function () {
+        window.getNewsData()
+    }
+</script>
+
+

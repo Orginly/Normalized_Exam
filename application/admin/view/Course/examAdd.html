@@ -1,0 +1,263 @@
+<el-card class="box-card">
+    <div slot="header" class="clearfix">
+        <span class="title" id="title">{$paperName}</span>
+        <el-link type="primary" href="/admin/index" style="float: right;font-size: 17px">返回</el-link>
+    </div>
+    <div class="box_wrap">
+        <div class="box_body">
+            <el-card class="box-card" shadow="hover">
+                <div slot="header" class="clearfix">
+                    <span>单选题 共 {$singleCount} 题  (总 {$singleScore * $singleCount} 分) </span>
+                </div>
+                <div>
+                    <el-form ref="form" :model="singleData" label-width="80px">
+                        {for start="1"; end="$singleCount+1" step="1" name="i"}
+                        <el-card class="box-card question" shadow="hover">
+                            <div slot="header" class="clearfix">
+                                <span>第 {$i} 题  &nbsp;( {$singleScore} 分)</span>
+                            </div>
+                            <div>
+                                <el-form-item label="题目">
+                                    <el-input v-model="singleData.singleData_{$i}.title"></el-input>
+                                </el-form-item>
+                                <el-form-item label=选项A>
+                                    <el-input v-model="singleData.singleData_{$i}.option.A"></el-input>
+                                </el-form-item>
+                                <el-form-item label="选项B">
+                                    <el-input v-model="singleData.singleData_{$i}.option.B"></el-input>
+                                </el-form-item>
+                                <el-form-item label="选项C">
+                                    <el-input v-model="singleData.singleData_{$i}.option.C"></el-input>
+                                </el-form-item>
+                                <el-form-item label="选项D">
+                                    <el-input v-model="singleData.singleData_{$i}.option.D"></el-input>
+                                </el-form-item>
+
+                                <el-form-item label="正确答案">
+                                    <el-radio-group v-model="singleData.singleData_{$i}.optionTrue"
+                                                    style="margin-top: 12px; font-size: 18px">
+                                        <el-radio label="A"></el-radio>
+                                        <el-radio label="B"></el-radio>
+                                        <el-radio label="C"></el-radio>
+                                        <el-radio label="D"></el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+
+                            </div>
+                        </el-card>
+                        {/for}
+                    </el-form>
+                </div>
+            </el-card>
+            <!--多选题-->
+            <el-card class="box-card question" shadow="hover" style="margin-top: 20px">
+                <div slot="header" class="clearfix">
+                    <span>多选题 共 {$multipleCount} 题   (总 {$multipleScore * $multipleCount} 分)</span>
+                </div>
+                <div>
+                    <el-form ref="form" :model="multipleData" label-width="80px">
+                        {for start="1" end="$multipleCount+1" step="1" name="i"}
+                        <el-card class="box-card question" shadow="hover">
+                            <div slot="header" class="clearfix">
+                                <span>第 {$i} 题 &nbsp;({$multipleScore} 分)</span>
+                            </div>
+                            <div>
+                                <el-form-item label="题目">
+                                    <el-input v-model="multipleData.multipleData_{$i}.title"></el-input>
+                                </el-form-item>
+                                <el-form-item label=选项A>
+                                    <el-input v-model="multipleData.multipleData_{$i}.option.A"></el-input>
+                                </el-form-item>
+                                <el-form-item label="选项B">
+                                    <el-input v-model="multipleData.multipleData_{$i}.option.B"></el-input>
+                                </el-form-item>
+                                <el-form-item label="选项C">
+                                    <el-input v-model="multipleData.multipleData_{$i}.option.C"></el-input>
+                                </el-form-item>
+                                <el-form-item label="选项D">
+                                    <el-input v-model="multipleData.multipleData_{$i}.option.D"></el-input>
+                                </el-form-item>
+
+                                <el-form-item label="正确答案">
+                                    <el-checkbox-group v-model="multipleData.multipleData_{$i}.optionTrue">
+                                        <el-checkbox label="选项A"></el-checkbox>
+                                        <el-checkbox label="选项B"></el-checkbox>
+                                        <el-checkbox label="选项C"></el-checkbox>
+                                        <el-checkbox label="选项D"></el-checkbox>
+                                    </el-checkbox-group>
+                                </el-form-item>
+                            </div>
+                        </el-card>
+                        {/for}
+                    </el-form>
+                </div>
+            </el-card>
+            <!--判断题-->
+            <el-card class="box-card question" shadow="hover" style="margin-top: 20px">
+                <div slot="header" class="clearfix">
+                    <span>判断题 共 {$judgmentCount} 题   (总 {$judgmentScore * $judgmentCount} 分)</span>
+                </div>
+                <div>
+                    <el-form ref="form" :model="singleData" label-width="80px">
+                        {for start="1" end="$judgmentCount+1" step="1" name="i"}
+                        <el-card class="box-card question" shadow="hover">
+                            <div slot="header" class="clearfix">
+                                <span>第 {$i} 题  &nbsp;({$judgmentScore} 分)</span>
+                            </div>
+                            <div>
+                                <el-form-item label="题目">
+                                    <el-input v-model="judgmentData.judgmentData_{$i}.title"></el-input>
+                                </el-form-item>
+                                <el-form-item label="正确答案">
+                                    <el-radio-group v-model="judgmentData.judgmentData_{$i}.optionTrue"
+                                                    style="margin-top: 9px; font-size: 18px">
+                                        <el-radio label="true">对</el-radio>
+                                        <el-radio label="false">错</el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                            </div>
+                        </el-card>
+                        {/for}
+                    </el-form>
+                </div>
+            </el-card>
+        </div>
+    </div>
+    <div style="text-align: center;">
+        <el-button type="primary" @click="submit" style="margin: 40px 0;padding:20px 40px;font-size: 19px" >发布试卷</el-button>
+    </div>
+
+</el-card>
+
+<!--以下闭合标签为layout-->
+</div>
+</div>
+</el-col>
+</el-row>
+</div>
+</div>
+
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            singleData: {
+                /*使用tp模版循环*/
+                {for start="1" end="$singleCount+1" step="1" name="i"}
+                singleData_{$i}:{
+                    title:'',
+                    option:{
+                        'A':'',
+                        'B':'',
+                        'C':'',
+                        'D':'',
+                    },
+                    optionTrue:'',
+                    belongPaperId: {$Think.post.paperId},
+                    score:{$Think.post.singleScore},
+                },
+                {/for}
+            },
+            multipleData: {
+                /*使用tp模版循环*/
+                {for start="1" end="$multipleCount+1" step="1" name="i"}
+                multipleData_{$i}:{
+                    title:'',
+                    option:{
+                        'A':'',
+                        'B':'',
+                        'C':'',
+                        'D':'',
+                    },
+                    optionTrue:[],
+                    belongPaperId: {$Think.post.paperId},
+                    score:{$Think.post.multipleScore},
+                },
+                {/for}
+            },
+            judgmentData: {
+                /*使用tp模版循环*/
+                {for start="1" end="$judgmentCount+1" step="1" name="i"}
+                judgmentData_{$i}:{
+                    title:'',
+                    option:{},
+                    belongPaperId: {$Think.post.paperId},
+                    score:{$Think.post.judgmentScore},
+                },
+                {/for}
+            },
+        },
+    methods:{
+        submit(){
+            axios.post('/admin/singleAdd',this.singleData)
+                .then(response=>{
+                    if(response.status === 200){
+
+                        /*如果选择题创建成功*/
+                        axios.post('/admin/multipleAdd',this.multipleData)
+                            .then(response=>{
+                                if(response.status === 200){
+
+                                    axios.post('/admin/judgmentAdd',this.judgmentData)
+                                        .then(response=>{
+                                            if(response.status === 200){
+
+                                                this.$message.success('发布试卷成功！')
+                                                location.href = '/admin/index'
+
+                                            }else {
+                                                return this.$message.error(response.data.msg)
+                                            }
+                                        })
+
+                                }else{
+                                    return this.$message.error(response.data.msg)
+                                }
+                            })
+
+                    }else{
+                        return this.$message.error(response.data.msg)
+                    }
+            })
+
+            /*
+            */
+
+        },
+        /*验证数据是否为空*/
+
+    }
+    })
+</script>
+
+<style>
+    .el-table {
+        font-size: 16px;
+    }
+
+    .el-button--mini, .el-button--small {
+        font-size: 15px;
+    }
+
+    .el-input--mini .el-input__inner {
+
+    }
+
+    .el-input__inner {
+
+    }
+
+    .el-input {
+
+    }
+
+    .el-form-item__label {
+        font-size: 17px;
+    }
+
+    .question .el-input {
+        width: 800px;
+        font-size: 16px;
+    }
+</style>

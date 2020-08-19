@@ -1,0 +1,214 @@
+<link rel="stylesheet" href="/static/home/css/index.css">
+
+<!--登录弹框-->
+<el-dialog
+        title="用户登录"
+        :visible.sync="dialogLoginShow"
+        width="650px"
+        :close-on-click-modal="false"
+        :destroy-on-close="true">
+    <el-form
+            class="demo-ruleForm"
+            status-icon
+            :model="loginForm"
+            :rules="registerRules"
+            label-width="145px">
+        <el-form-item label="学号：" prop="studentId">
+            <el-input v-model="loginForm.studentId" autocomplete="on"></el-input>
+        </el-form-item>
+        <el-form-item label="密码：" prop="password">
+            <el-input v-model="loginForm.password" type="password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="验证码：" class="vcode_input" prop="captcha">
+            <el-input v-model="loginForm.captcha" autocomplete="off"></el-input>
+            <div class="verifycode">
+                <img src="/index/verify" @click="refreshVerify" ref="verify" alt="">
+            </div>
+        </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+            <input type="text" @keyup.enter="refreshVerify">
+        <el-button @click="dialogLoginShow = false">取 消</el-button>
+        <el-button type="primary" @click="loginPost">确定</el-button>
+    </div>
+</el-dialog>
+<!--注册弹框-->
+<el-dialog
+        title="学生注册"
+        :visible.sync="dialogRegisterShow"
+        width="650px"
+        :close-on-click-modal="false"
+        :destroy-on-close="true"
+>
+    <el-form
+            class="demo-ruleForm"
+            status-icon
+            label-width="145px"
+            :model="registerForm"
+            :rules="registerRules"
+            ref="registerRules">
+        <el-form-item label="学号：" prop="studentId">
+            <el-input v-model="registerForm.studentId"></el-input>
+        </el-form-item>
+        <el-form-item label="密码：" prop="password">
+            <el-input v-model="registerForm.password" type="password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码：" prop="confirm_password">
+            <el-input v-model="registerForm.confirm_password" type="password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名：" prop="username">
+            <el-input v-model="registerForm.username"
+                      autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="所在学校：">
+            <el-input v-model="registerForm.edu" placeholder="广西理工职业技术学院" :disabled="true"
+                      autocomplete="off"></el-input>
+        </el-form-item>
+        </el-form-item>
+        <el-form-item label="验证码：" class="vcode_input" prop="captcha">
+            <el-input v-model="registerForm.captcha" autocomplete="off"></el-input>
+            <div class="verifycode">
+                <img src="/index/verify" ref="verify" @click="refreshVerify" alt="">
+            </div>
+        </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogRegisterShow = false">取 消</el-button>
+        <el-button type="primary" @click="registerPost">确 定</el-button>
+    </div>
+</el-dialog>
+
+
+    <div id="main" class="auto" >
+        <el-row :gutter="20">
+            <!--考试要点-->
+            <el-col :span="17" class="left">
+                <div class="hot" style="margin-top: 0px">
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                            <span class="title">考试要点</span>
+                            <div style="float: right; padding: 3px 0" class="a_hover">
+                                <a href="../home/course.php">更多</a>
+                            </div>
+                        </div>
+                        <div class="new_title" style="text-align: center;">
+                            <h3>{$data.title}</h3>
+                            <br>
+                            <p>作者：{$data.author}</p>
+                        </div>
+                            <el-divider></el-divider>
+                        <div class="new_main">
+                            <div class="content">
+                                {$data.content|raw}
+                            </div>
+                        </div>
+
+                    </el-card>
+                </div>
+            </el-col>
+            <!--右边栏-->
+            <el-col :span="7" class="right">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span class="title">推荐专题</span>
+                    </div>
+                    <div class="box_card a_hover">
+                        <ul>
+                            {foreach $new as $item}
+                            <li><a href="#">{$item.title}</a></li>
+                            {/foreach}
+                        </ul>
+                    </div>
+
+                </el-card>
+            </el-col>
+        </el-row>
+    </div>
+
+
+
+</div>
+
+
+    <script>
+        let app = new Vue({
+            el: '#app',
+            data: {
+                /*之后所有需要登录的地方都会跳转到首页然后才会跳出dialog*/
+                dialogLoginShow: false,
+                loginForm: {
+                    studentId: '',
+                },
+                /*注册*/
+                dialogRegisterShow: false,
+                registerForm: {
+                    studentId: '',
+                    edu: '广西理工职业技术学院',
+                },
+                /*注册表单验证规则*/
+                registerRules: {
+                    studentId: [
+                        {required: true, message: '请输入学号', trigger: 'blur'},
+                        {min: 8, max: 15, message: '学号长度为在 8 到 15 个数字', trigger: 'blur'}
+                    ],
+                    password: [
+                        {required: true, message: '请输入密码', trigger: 'blur'},
+                        {min: 6, max: 32, message: '密码长度为在 6 到 32 个字符', trigger: 'blur'}
+                    ],
+                    username: [
+                        {required: true, message: '请输入名字', trigger: 'blur'}
+                    ],
+                    confirm_password: [
+                        {required: true, message: '请重新输入密码', trigger: 'blur'},
+                    ],
+                    vcode: [
+                        {required: true, message: '请输入验证码', trigger: 'blur'},
+                    ]
+                },
+            },
+            methods: {
+                loginPost() {
+                    console.log(this.loginForm)
+                    axios.post('/index/login', this.loginForm)
+                        .then(response => {
+                            console.log(response)
+                            let {status, data} = response
+                            if (status === 200) {
+                                console.log(response);
+                                this.dialogLoginShow = false
+                                this.$message.success('登录成功,' + data.username + '欢迎回来')
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 600)
+                            } else {
+                                this.refreshVerify()
+                                this.$message.error(data.msg)
+                            }
+                        })
+                },
+                /*提交注册表单*/
+                registerPost() {
+                    console.log(this.registerForm)
+                    axios.post('/index/register', this.registerForm)
+                        .then(response => {
+                            console.log(response)
+                            let {status, data} = response
+                            if (status === 200) {
+                                this.$message.success('恭喜你，注册成功')
+                                this.dialogRegisterShow = false
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 800)
+                            } else {
+                                this.refreshVerify()
+                                this.$message.error('错了喔,' + data.msg);
+                            }
+                        })
+                },
+                // 刷新验证码
+                refreshVerify() {
+                    this.$refs.verify.src = '/index/verify'
+                }
+            }
+        })
+    </script>

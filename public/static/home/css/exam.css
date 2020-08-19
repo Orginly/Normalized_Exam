@@ -1,0 +1,65 @@
+.left .el-card__header{
+    padding: 25px 0 10px 25px;
+}
+
+.el-menu{
+    border-radius: 5px;
+    border: 0;
+}
+
+/*我的考试*/
+.exam_list .title{padding: 15px;color: #424242}
+.exam_list .title li h4 span {color: #858386}
+.exam_list .title li h4{font-weight: bold }
+.exam_list .title li{font-size: 20px;
+    width:100%;
+    margin-bottom: 33px;
+    padding-bottom: 20px;
+    border-bottom: #cccccc 1px solid
+}
+.exam_list .title li:last-child{
+    margin-bottom: 10px;
+
+}
+.exam_list .badge{font-size: 12px;
+    background: #6a6a6a;
+    color: white;
+    padding: 4px 5px;
+    border-radius: 6px;
+    display: inline-block;
+}
+.exam_list .el-button{
+    background: #5bc0de;
+    color: white;
+    position: relative;
+    top: -27px;
+    float: right;
+}
+
+/*考试记录*/
+#record .el-card.is-always-shadow, #scoreTotal .el-card.is-always-shadow{
+     -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+     box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+}
+#record .el-table, .el-table thead{
+    color: #333;
+}
+
+/*成绩单*/
+#scoreTotal h1{
+    color: #890707;
+    text-align: center;
+    font-size: 35px;
+}
+
+#scoreTotal p{
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 15px;
+}
+#scoreTotal span{
+    display: inline-block;
+    padding: 5px;
+    color: #31708f;
+}
+

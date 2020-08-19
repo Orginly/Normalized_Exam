@@ -1,0 +1,126 @@
+<el-card class="box-card">
+    <div slot="header" class="clearfix">
+        <span class="title" id="title">科目管理</span>
+        <el-link type="primary" href="/admin/index" style="float: right;font-size: 17px">返回</el-link>
+    </div>
+    <div class="box_wrap" style="margin: 0 auto">
+
+        <el-form  class="paperForm" ref="paperForm" :model="paperForm" label-width="140px">
+            <el-form-item label="试卷名称：" required>
+                <el-input v-model="paperForm.paperName"></el-input>
+            </el-form-item>
+            <el-form-item label="所属科目：" required>
+                <el-input v-model="paperForm.courseName"></el-input>
+            </el-form-item>
+            <el-form-item label="单选题数：" style="display: inline-block" required>
+                <el-input v-model="paperForm.singleCount" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-form-item label="多选题数：" style="display: inline-block" required>
+                <el-input v-model="paperForm.multipleCount" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-form-item label="判断题数：" style="display: inline-block" required>
+                <el-input v-model="paperForm.judgmentCount" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-form-item label="每题分数：" style="display: inline-block" required>
+                <el-input v-model="paperForm.singleScore" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-form-item label="每题分数：" style="display: inline-block" required>
+                <el-input v-model="paperForm.multipleScore" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-form-item label="每题分数：" style="display: inline-block" required>
+                <el-input v-model="paperForm.judgmentScore" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-form-item label="及格分数：" required style="display: inline-block" >
+                <el-input v-model="paperForm.passScore" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-form-item label="考试时间（分）：" style="display: inline-block" required>
+                <el-input v-model="paperForm.examTime" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-form-item label="总分（分）：" style="display: inline-block" required>
+                <el-input v-model="paperForm.totalScore" style="width: 100px"></el-input>
+            </el-form-item>
+            <el-form-item style="text-align: center; position: relative;right: 56px;top: 20px" >
+                <el-button type="primary" @click="onSubmit" >立即创建</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+
+    </div>
+</el-card>
+
+<!--以下闭合标签为layout-->
+</div>
+</div>
+</el-col>
+</el-row>
+</div>
+</div>
+
+<script>
+    let app = new Vue({
+        el:'#app',
+        data:{
+            paperForm: {
+                paperId:'',
+                paperName:'',
+                courseName:'',
+                courseId:0,
+                singleCount:'',
+                singleScore:'',
+                multipleScore:'',
+                multipleCount:'',
+                judgmentCount:'',
+                judgmentScore:'',
+                examTime:60,
+                passScore: 60,
+                totalScore:100,
+            }
+        },
+        methods:{
+            onSubmit(){
+                /*发送请求创建试卷*/
+                axios.post('/admin/paperAdd',this.paperForm)
+                .then(response =>{
+                    let {data , status} = response
+                    console.log(response);
+                    if(status === 200){
+                        this.$message.success(data.msg)
+                        /*获取到创建试卷的id*/
+                        this.paperForm.paperId = data.data
+
+                        /*发送post请求到*/
+                        //创建form表单
+                        let temp_form = document.createElement("form");
+                        temp_form.action = '/admin/examAdd';
+                        //如需打开新窗口，form的target属性要设置为'_blank'
+                        temp_form.method = "post";
+                        temp_form.style.display = "none";
+                        //添加参数
+                        for (var item in this.paperForm) {
+                            console.log(this.paperForm[item])
+                            var opt = document.createElement("input");
+                            opt.name = item;
+                            opt.value = this.paperForm[item];
+                            temp_form.appendChild(opt);
+                        }
+                        document.body.appendChild(temp_form);
+
+                        //提交数据
+                        setTimeout(function () {
+                            temp_form.submit()
+                        },1000)
+                    }else{
+                        return this.$message.error(data.msg)
+                    }
+                })
+
+            }
+        },
+    })
+</script>
+
+<style>
+    .paperForm{
+        margin: 40px 150px 70px 100px;
+    }
+</style>

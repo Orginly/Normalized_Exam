@@ -1,0 +1,87 @@
+<link rel="stylesheet" href="/static/home/css/exam.css">
+<div id="main" class="auto">
+    <el-row :gutter="20">
+        <el-col :span="17" class="left">
+            <!--最新课程-->
+            <div class="course">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span class="title">我的课程</span>
+                       <!-- <div style="float: right; padding: 3px 25px" class="a_hover">
+                            <a href="../home/course.php">更多</a>
+                        </div>-->
+                    </div>
+
+                    <div class="box">
+                        {foreach $course as $item}
+                        <div class="box_img">
+                            <a @click="courseMsgBox">
+                                <img src="{$item.logo}" alt="">
+                                <div style="padding: 14px">
+                                    <span>{$item.courseName}</span>
+                                </div>
+                            </a>
+                        </div>
+                        {/foreach}
+                    </div>
+                </el-card>
+            </div>
+        </el-col>
+
+        <!--右边栏-->
+        <el-col :span="7" class="right">
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span class="title">最新课程</span>
+                </div>
+                <div class="box_card a_hover">
+                    <ul>
+                        {foreach $course as $item}
+                        <li ><a>{$item.courseName}</a></li>
+                        {/foreach}
+                    </ul>
+                </div>
+
+            </el-card>
+        </el-col>
+    </el-row>
+</div>
+
+
+<!--app 的div-->
+</div>
+
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data:{
+            dialogLoginShow: false,
+            LoginForm:[],
+        },
+        methods:{
+            courseMsgBox(){
+                this.$confirm('你还未开通次课程, 您是否需要免费开通?', '提示', {
+                    confirmButtonText: '开通',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '开通课程成功!'
+                    });
+                    setTimeout(function () {
+                        location.href = '/index/exam'
+                    },700)
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消开通课程'
+                    });
+                });
+            }
+        }
+
+    })
+</script>

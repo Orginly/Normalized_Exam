@@ -1,0 +1,131 @@
+<link rel="stylesheet" href="/static/home/css/exam.css">
+<div id="main" class="auto">
+    <el-row :gutter="24" >
+
+        <!--功能导航栏-->
+        <!--<el-col :span="5" class="left">
+            <el-card :body-style="{ padding: '0px' }">
+                <div slot="header" class="clearfix">
+                    <span class="title" style="font-size: 16px">功能导航</span>
+                </div>
+                <el-menu
+                        default-active="2"
+                        class="el-menu-vertical-demo"
+                >
+                    <el-menu-item index="exam" @click="exam">
+                        <i class="el-icon-document"></i>
+                        <span slot="title">我的考试</span>
+                    </el-menu-item>
+                    <el-menu-item index="record" @click="record">
+                        <i class="el-icon-time"></i>
+                        <span slot="title">考试记录</span>
+                    </el-menu-item>
+
+                    <el-menu-item index="exercise" @click="exercise">
+                        <i class="el-icon-edit-outline"></i>
+                        <span slot="title">章节练习</span>
+                    </el-menu-item>
+                </el-menu>
+            </el-card>
+        </el-col>-->
+        <!--我的考试-->
+        <el-col :span="3">&nbsp;</el-col>
+        <el-col :span="18" class="right" style="margin: 0 auto">
+            <div class="hot">
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span class="title" id="title">我的考试</span>
+                        <el-link href="/index/exam"  style="color:#409EFF;float: right; padding: 3px 0" type="primary">返回</el-link>
+                    </div>
+                    <div class="exam_wrap">
+                        <div id="scoreTotal" style="height:380px">
+                            <h3 style="text-align: center;margin-bottom: 20px">[{$courseName}] {$paperName}</h3>
+                            <div style="width: 350px;display: inline-block">
+                                <h1>{$totalScore}分</h1>
+                            </div>
+                            <p>正确率：{$accuracy}%  &nbsp; 答卷耗时：{$totalTime}分钟</p><br>
+                            <span>得分详情：</span>
+                            <el-table
+                                    :data="scoreTotalData"
+                                    style="width: 100%;border: 1px solid #e3e3e3"
+                            >
+                                <el-table-column
+                                        prop="question"
+                                        label="题型"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                        prop="questionTotal"
+                                        label="总题数"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                        prop="questionYes"
+                                        label="答对题数"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                        prop="questionFalse"
+                                        label="错题数"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                        prop="score"
+                                        label="得分"
+                                >
+                                </el-table-column>
+
+                            </el-table>
+                        </div>
+                    </div>
+                </el-card>
+            </div>
+        </el-col>
+        <el-col :span="3">&nbsp;</el-col>
+    </el-row>
+</div>
+
+
+</div>
+
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            getURl:'{$Think.get.grade}',
+            /*成绩单数据*/
+            scoreTotalData: [{
+                question: '单选题',
+                questionTotal: '{$singleCount}',
+                questionYes: '{$singleCount - $singleErr}',
+                questionFalse: '{$singleErr}',
+                score: '{$singleScore}',
+            },{
+                question: '多选题',
+                questionTotal: '{$multipleCount}',
+                questionYes: '{$multipleCount - $multipleErr}',
+                questionFalse: '{$multipleErr}',
+                score: '{$multipleScore}',
+            },{
+                question: '判断题',
+                questionTotal: '{$judgmentCount}',
+                questionYes: '{$judgmentCount - $judgmentErr}',
+                questionFalse: '{$judgmentErr}',
+                score: '{$judgmentScore}',
+            },
+            ]
+        },
+        methods: {
+
+
+        },
+        watch: {
+
+        },
+        created(){
+           console.log(this.getURl);
+
+        }
+    })
+</script>

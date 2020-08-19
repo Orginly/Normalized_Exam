@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/element-index.css">
+    <link rel="stylesheet" href="/static/home/css/common.css">
+    <script src="/static/js/vue.js"></script>
+    <script src="/static/js/element-index.js"></script>
+    <script src="/static/js/axios.min.js"></script>
+    <title>首页 - Normalized考试系统</title>
+</head>
+
+<body>
+
+<div id="app">
+    <div class="header_wrap">
+        <div id="header" class="auto">
+            <div class="logo">
+                <img src="/static/home/images/logo.png" width="240" height="60" style="padding-top:8px ;" alt=""/>
+            </div>
+            <div class="header_right">
+                <a class="btn_a" href="/">首页</a>
+                <a class="btn_a" href="/index/news">要点</a>
+                {if $Think.session.studentId}
+                <a class="btn_a" href="/index/course">课程</a>
+                <a class="btn_a" href="/index/exam">考试</a>
+                {else/}
+                <a class="btn_a" onclick="alert('你还未登录！')">课程</a>
+                <a class="btn_a" onclick="alert('你还未登录！')">考试</a>
+                {/if}
+
+                {if !$Think.session.studentId}
+                <a class="btn_a" @click="dialogLoginShow = true">登录</a>
+                <a class="btn_a" @click="dialogRegisterShow = true">注册</a>
+                {else/}
+                <span>欢迎 {$Think.session.username} | <a onclick="logout()">注销</a></span>
+                {/if}
+            </div>
+            <!--退出登录-->
+        </div>
+    </div>
+    <div style="margin-top: 8px"></div>
+
+    <!--模版占位符-->
+    {__CONTENT__}
+
+    <div id="footer">
+        <div class=" footer_title">在线考试系统</div>
+        <div class="footer_powered">Powered by 冯仁贵 ©2020 18计网一班</div>
+    </div>
+    <script>
+        function logout(){
+            axios.get('/index/logout')
+                .then(response => {
+                    if(response.status === 200){
+                        alert('注销成功!');
+                        location.reload();
+                    }
+                })
+        }
+
+    </script>
+</body>
+
+</html>

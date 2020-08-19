@@ -1,0 +1,308 @@
+<!--添加科目弹窗-->
+<el-dialog title="添加科目" :visible.sync="courseAddShow" width="700px" class="dialogWidth">
+    <el-form v-model="courseAddData">
+        <el-form-item label="科目：" label-width="194px">
+            <el-input v-model="courseAddData.courseName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="教师：" label-width="194px">
+            <el-input v-model="courseAddData.teacherName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="所在班级：" label-width="194px">
+            <el-input v-model="courseAddData.className" autocomplete="off"></el-input>
+        </el-form-item >
+        <el-form-item label="科目Logo：" label-width="194px" >
+            <el-upload
+                    class="avatar-uploader"
+                    action="/admin/courseUpload"
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess"
+                    :before-upload="beforeAvatarUpload">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+        </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+        <el-button @click.stop="courseAddShow = false">取 消</el-button>
+        <el-button type="primary" @click.stop="courseAddPost">确 定</el-button>
+    </div>
+</el-dialog>
+
+<!--修改科目弹窗-->
+<el-dialog title="修改科目" :visible.sync="courseEditShow" width="700px" class="dialogWidth">
+    <el-form v-model="courseAddData">
+        <el-form-item label="科目：" label-width="194px">
+            <el-input v-model="courseEditData.courseName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="教师：" label-width="194px">
+            <el-input v-model="courseEditData.teacherName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="所在班级：" label-width="194px">
+            <el-input v-model="courseEditData.className" autocomplete="off"></el-input>
+        </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+        <el-button @click.stop="courseEditShow = false">取 消</el-button>
+        <el-button type="primary" @click.stop="courseEditPost">确 定</el-button>
+    </div>
+</el-dialog>
+
+
+<el-card class="box-card">
+    <div slot="header" class="clearfix">
+        <span class="title" id="title">科目管理</span>
+        <el-link type="primary" @click="courseAddShow = true" style="float: right;font-size: 17px">添加科目</el-link>
+    </div>
+    <div class="box_wrap">
+        <div class="box_body">
+            <el-table
+                    :data="courseData.filter(data => !search || data.courseName.toLowerCase().includes(search.toLowerCase()))"
+                    style="width: 100%;margin-bottom: 30px">
+                <el-table-column
+                        label="id"
+                        prop="id">
+                </el-table-column>
+                <el-table-column
+                        label="科目"
+                        prop="courseName">
+                </el-table-column>
+                <el-table-column
+                        label="教师"
+                        prop="teacherName">
+                </el-table-column>
+                <el-table-column
+                        label="所在班级"
+                        prop="className">
+                </el-table-column>
+                <el-table-column
+                        align="left">
+                    <template slot="header" slot-scope="scope">
+                        <el-input
+                                v-model="search"
+                                size="mini"
+                                placeholder="输入关键字搜索"></el-input>
+                    </template>
+                    <template slot-scope="scope">
+                        <el-button
+                                size="mini"
+                                @click="courseEdit(scope.row)">编辑
+                        </el-button>
+                        <el-button
+                                size="mini"
+                                type="danger"
+                                @click="courseDel(  scope.row.id)">删除
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+        <div class="block" style="text-align: center;">
+            <el-pagination
+                    layout="prev, pager, next"
+                    :total="50">
+            </el-pagination>
+        </div>
+
+    </div>
+</el-card>
+
+<!--以下闭合标签为layout-->
+</div>
+</div>
+</el-col>
+</el-row>
+</div>
+</div>
+
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            imageUrl: '',
+            courseAddShow: false,
+            courseEditShow: false,
+            courseAddData: {},   //添加科目绑定的数据
+            courseEditData: [],  //修改科目绑定的数据
+            courseData: [{
+                id: 1,
+                courseName: '软件工程',
+                teacher: '廖莹',
+                className: '18计网一班',
+                average: 90,
+            },],
+            search: '',
+        },
+        methods: {
+            /*获取表格全部数据*/
+            getCourseData() {
+                axios.get('/admin/coursedata')
+                    .then(response => {
+                        //console.log(response.data.courseData);
+                        let {data, status} = response;
+                        if (status === 200) {
+                            this.courseData = data.courseData
+                        }
+                    })
+            },
+            /*添加科目*/
+            courseAddPost() {
+                console.log(this.courseAddData)
+                axios.post('/admin/courseData', this.courseAddData)
+                    .then(response => {
+                        console.log(response);
+                        let {status, data} = response
+                        if (status === 200) {
+                            this.getCourseData()
+                            this.courseAddShow = false
+                            return this.$message.success(data.msg)
+                        } else {
+                            return this.$message.error(data.msg)
+                        }
+                    })
+            },
+            /*显示弹出框*/
+            courseEdit(item) {
+                console.log(item)
+                this.courseEditShow = true
+                //把item传递给courseEditData
+                this.courseEditData = item
+            },
+            /*提交修改的数据*/
+            courseEditPost() {
+                //发送ajax请求
+                axios.put('/admin/coursedata', this.courseEditData)
+                    .then(response => {
+                        console.log(response)
+                        let {status, data} = response
+                        if (status === 200) {
+                            this.getCourseData()
+                            this.courseEditShow = false
+                            return this.$message.success(data.msg)
+                        } else {
+                            return this.$message.error(data.msg)
+                        }
+                    })
+            },
+            courseDel(id) {
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //发送axios delete请求
+                    axios({
+                        url : '/admin/coursedata',
+                        method:'delete',
+                        data:{
+                            id:id,
+                        }
+                    }).then(response => {
+                            let {data, status} = response
+                            if (status === 204) {
+                                this.getCourseData()
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功!'
+                                });
+                            }
+                        })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+
+            },
+
+            handleAvatarSuccess(res, file) {
+                this.imageUrl = URL.createObjectURL(file.raw);
+                this.courseAddData.logo = res
+            },
+            beforeAvatarUpload(file) {
+                const isJPG = file.type === 'image/jpeg';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG) {
+                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                return isJPG && isLt2M;
+            }
+        },
+        created() {
+            this.getCourseData();
+        }
+    })
+</script>
+
+<style>
+    .el-table {
+        font-size: 16px;
+    }
+
+    .el-button--mini, .el-button--small {
+        font-size: 15px;
+    }
+
+    .el-input--mini .el-input__inner {
+        height: 36px;
+        font-size: 14px;
+        line-height: 28px;
+    }
+
+    .el-pager li {
+        padding: 0 18px;
+        font-size: 15px;
+    }
+
+    .el-table--enable-row-transition .el-table__body td {
+        -webkit-transition: background-color .25s ease;
+        transition: background-color .25s ease;
+        padding: 22px 0;
+    }
+
+    .dialogWidth .el-input__inner {
+        width: 340px;
+    }
+    .el-input__inner {
+        width: 140px;
+    }
+
+    .el-input {
+        width: 0;
+        font-size: 16px;
+    }
+
+    .el-form-item__label {
+        font-size: 17px;
+    }
+
+
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+</style>

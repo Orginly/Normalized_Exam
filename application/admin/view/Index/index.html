@@ -1,0 +1,194 @@
+<!--修改试卷信息-->
+<el-dialog title="编辑试卷" :visible.sync="dialogPaperShow" width="820px">
+
+    <el-form  class="paperForm" ref="paperForm" :model="paperForm" label-width="140px">
+        <el-form-item label="试卷名称：" required>
+            <el-input v-model="paperForm.paperName"></el-input>
+        </el-form-item>
+        <el-form-item label="所属科目：" required>
+            <el-input v-model="paperForm.courseName"></el-input>
+        </el-form-item>
+        <el-form-item label="及格分数：" required style="display: inline-block" >
+            <el-input v-model="paperForm.passScore" style="width: 100px"></el-input>
+        </el-form-item>
+        <el-form-item label="考试时间（分）：" style="display: inline-block" required>
+            <el-input v-model="paperForm.examTime" style="width: 100px"></el-input>
+        </el-form-item>
+        <el-form-item label="总分（分）：" style="display: inline-block" required>
+            <el-input v-model="paperForm.totalScore" style="width: 100px"></el-input>
+        </el-form-item>
+        <el-form-item style="text-align: center; position: relative;right: 56px;top: 20px" >
+            <el-button type="primary" >修改试题</el-button>
+        </el-form-item>
+    </el-form>
+
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogPaperShow = false">取 消</el-button>
+        <el-button type="primary" @click="onSubmit">确 定</el-button>
+    </div>
+</el-dialog>
+
+
+
+<el-card class="box-card">
+    <div slot="header" class="clearfix">
+        <span class="title" id="title">试题管理</span>
+        <el-link type="primary"  href="/admin/examname" style="float: right;font-size: 17px">添加试卷</el-link>
+    </div>
+    <div class="box_wrap">
+        <div class="box_body">
+                <el-table
+                    :data="paperData.filter(data => !search || data.paperName.toLowerCase().includes(search.toLowerCase()))"
+                    style="width: 100%;margin-bottom: 30px">
+                <el-table-column
+                        label="试卷名"
+                        prop="paperName" width="250">
+                </el-table-column>
+                <el-table-column
+                        label="科目"
+                        prop="courseName">
+                </el-table-column>
+                <el-table-column
+                        label="创建时间"
+                        prop="createTime"
+                        width="200px">
+                </el-table-column>
+                    <el-table-column
+                            label="已考人数"
+                            prop="examCount" width="90">
+                    </el-table-column>
+                <el-table-column
+                        label="考试时间"
+                        prop="examTime" width="85">
+                </el-table-column>
+                <el-table-column
+                        align="right">
+                    <template slot="header" slot-scope="scope">
+                        <el-input
+                                v-model="search"
+                                size="mini"
+                                placeholder="输入关键字搜索"/>
+                    </template>
+                    <template slot-scope="scope">
+                        <el-button
+                                size="mini"
+                                @click="paperEdit( scope.row)">编辑</el-button>
+                        <el-button
+                                size="mini"
+                                type="danger"
+                                @click="paperDel(scope.row)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table></div>
+            <div class="block" style="text-align: center;">
+                <el-pagination
+                        layout="prev, pager, next"
+                        :total="10">
+                </el-pagination>
+            </div>
+
+        </div>
+</el-card>
+
+<!--以下闭合标签为layout-->
+</div>
+</div>
+</el-col>
+</el-row>
+</div>
+</div>
+
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data:{
+            paperData: [],
+            dialogPaperShow : false,
+            paperForm: {
+                paperId:'',
+                paperName:'',
+                courseName:'',
+                courseId:0,
+                singleCount:'',
+                singleScore:'',
+                multipleScore:'',
+                multipleCount:'',
+                judgmentCount:'',
+                judgmentScore:'',
+                examTime:90,
+                passScore: 60,
+                totalScore:100,
+            },
+            search: '',
+        },
+        methods: {
+            getPaperData(){
+                axios.get('/admin/paper')
+                .then(response => {
+                    if(response.status === 200){
+                        this.paperData = response.data.data
+                    }else{
+                        return this.$message.error(data.msg)
+                    }
+                })
+            },
+            paperEdit(item) {
+                console.log(item)
+                this.dialogPaperShow = true
+                this.paperForm = item
+            },
+            onSubmit(){
+                axios.put('/admin/paperEdit',this.paperForm)
+                .then(response => {
+                    let {status,data} = response
+                    if(status === 200){
+                        this.dialogPaperShow = false
+                        this.getPaperData()
+                        this.$message.success(data.msg)
+                    }else {
+                        return this.$message.error(data.msg)
+                    }
+                })
+            },
+            paperDel(item) {
+                this.$confirm('此操作将永久删除该试卷, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios({
+                        method:'delete',
+                        url:'/admin/paperEdit',
+                        data:{
+                            id:item.id
+                        }
+                    }).then(response =>{
+                        if(response.status === 200){
+                            this.getPaperData()
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                        }else{
+                            this.$message({
+                                type: 'error',
+                                message: '删除失败!'
+                            });
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            }
+        },
+        created(){
+            this.getPaperData()
+        }
+    })
+</script>
+
+

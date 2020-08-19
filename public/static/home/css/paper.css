@@ -1,0 +1,79 @@
+/*头部*/
+.header_wrap{
+    float: top;
+    position: fixed;
+}
+.header_right span {
+    display: inline-block;
+    position: relative;
+    left: -100px;
+    font-size: 21px;
+    font-weight: bold;
+}
+.left{
+    width: 380px;
+    position: fixed;
+    float: left;
+}
+.left .el-card{
+    border: 0;
+    border-radius: 0;
+}
+
+.left .el-card__body {
+    padding: 10px 20px;
+}
+
+.right{
+    float: right;
+}
+/*题目目录按钮*/
+.btn{
+    display: inline-block;
+    border: #a0a0a0 1px solid;
+    margin: 2px 2px;
+    border-radius: 4px;
+    width: 27px;
+    height: 29px;
+    line-height: 29px;
+    text-align: center;
+    font-size: 13px;
+}
+
+/*题目主要部分*/
+.right .topic ul li{
+    text-indent: 1em;
+    font-size: 19px;
+}
+.right .topic ul li p{
+    margin-bottom: 9px;
+}
+
+
+.right .topic ul li input{
+    margin:0 0px 0 0px;
+    width: 100px;
+    height: 20px;
+    vertical-align: middle;
+}
+
+.right .topic ul li span{
+    vertical-align: bottom;
+    position: relative;
+    bottom: -1px;
+    left: -50px;
+    display: inline-block;
+    pointer-events:none;    /*不可点击*/
+}
+.right .topic ul li input:first-child{
+    margin-left: 0;
+}
+
+.right .box-card{
+    margin-bottom: 15px;
+}
+
+.el-card.is-always-shadow, .el-card.is-hover-shadow:focus, .el-card.is-hover-shadow:hover {
+    -webkit-box-shadow: 0 0px 0px 0 rgba(0,0,0,.1);
+    box-shadow: 0 0px 00px 0 rgba(0,0,0,.1);
+}
