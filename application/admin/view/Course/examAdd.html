@@ -190,31 +190,13 @@
         },
     methods:{
         submit(){
-            axios.post('/admin/singleAdd',this.singleData)
+            axios.post('/admin/questionPost',{singleData:this.singleData,multipleData:this.multipleData,judgmentData:this.judgmentData})
                 .then(response=>{
                     if(response.status === 200){
-
-                        /*如果选择题创建成功*/
-                        axios.post('/admin/multipleAdd',this.multipleData)
-                            .then(response=>{
-                                if(response.status === 200){
-
-                                    axios.post('/admin/judgmentAdd',this.judgmentData)
-                                        .then(response=>{
-                                            if(response.status === 200){
-
-                                                this.$message.success('发布试卷成功！')
-                                                location.href = '/admin/index'
-
-                                            }else {
-                                                return this.$message.error(response.data.msg)
-                                            }
-                                        })
-
-                                }else{
-                                    return this.$message.error(response.data.msg)
-                                }
-                            })
+                        this.$message.success(response.data.msg)
+                        setTimeout(function () {
+                            location.href = '/admin/index'
+                        },700)
 
                     }else{
                         return this.$message.error(response.data.msg)

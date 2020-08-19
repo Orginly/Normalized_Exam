@@ -9,6 +9,7 @@ use think\Request;
 
 class Course extends Controller
 {
+
     public function index()
     {
         return view('admin@/Course/course');
@@ -127,9 +128,10 @@ class Course extends Controller
         $belongCourseId = model('Course')
             ->field('id')
             ->where('courseName', $request->post('courseName'))
-            ->find()['id'];
+            ->find();
+
         /*如果科目id不存在*/
-        if (!$belongCourseId) {
+        if ($belongCourseId == null) {
             return false;
         }
          return $belongCourseId;
@@ -142,7 +144,7 @@ class Course extends Controller
         /*获取科目id*/
         $belongCourseId =  $this->getCourse($request);
         if($belongCourseId){
-            $data['belongCourseId'] = $belongCourseId;
+            $data['belongCourseId'] = $belongCourseId['id'];
         }else{
             return json(['msg' => '科目不存在，请先添加科目'],203);
         }
@@ -181,6 +183,9 @@ class Course extends Controller
         if($request->isDelete()){
             $id = $request->delete('id');
             $ret = model('Paper')->where('id',$id)->delete();
+            model('Single')->where('belongPaperId',$id)->delete();
+            model('Judgment')->where('belongPaperId',$id)->delete();
+            model('multiple')->where('belongPaperId',$id)->delete();
             if(!$ret){
                 return json(['msg' => '试卷删除失败'],203);
             }
@@ -190,8 +195,8 @@ class Course extends Controller
 
     /*题目*/
     /*处理选择题*/
-    public function singleAdd(Request $request){
-        $data  =  $request->post();
+    public function singleAdd($data){
+        $status = true; //为当前是否可以提交的状态
 
         foreach($data as  $key => $item)
         {
@@ -202,38 +207,46 @@ class Course extends Controller
 
             /*判断标题是否为空*/
             if($item['title'] == ''){
-                return json(['msg' => '选择题第'.$id.' 题标题不能为空'],203);
+                $status = false;
+                return '选择题第 '.$id.' 题标题不能为空';
             }
 
             /*判断选项是否为空 因为选项是数组所以需要循环*/
             foreach($item['option'] as $optionVal){
                 if($optionVal === ''){
-                    return json(['msg' => '选择题第 '.$id.' 题选项不能为空'],203);
+                    $status = false;
+                    return '选择题第 '.$id.' 题选项不能为空';
                 }
             }
             /*判断正确选项是否为空*/
             if($item['optionTrue'] == ''){
-                return json(['msg' => '选择题第'.$id.' 题正确选项不能为空'],203);
+                $status = false;
+                return '选择题第 '.$id.' 题正确选项不能为空';
             }
 
             /*转成json数据*/
             $data[$key]['option'] = json_encode($item['option']);
         }
+        /*如果提交状态为false 那么停止执行*/
+        if(!$status){
+            return false;
+        }
         //批量保存数据到数据库
         $singleModel = model('Single');
         $result = $singleModel->saveAll($data);
         if(!$result){
-            return json(['msg' => '选择题创建失败'],203);
+            return '选择题创建失败';
         }
-        return json(['msg' => '选择题创建成功'],200);
+        return true;
     }
 
     /*多选题*/
-    public function multipleAdd(Request $request){
-        $data  =  $request->post();
+    public function multipleAdd($data){
+
+        $status = true;
+
         foreach($data as  $key => $item)
         {
-
             /*h获取到当前题目id*/
             preg_match_all('/\d+/',$key,$arr);
             $id = implode($arr[0]);
@@ -245,36 +258,46 @@ class Course extends Controller
 
             /*验证标题*/
             if(empty($item['title'])){
-                return json(['msg' => '多择题第'.$id.' 题标题不能为空'],203);
+                $status = false;
+                return '多择题第'.$id.' 题标题不能为空';
             }
 
             /*判断选项是否为空 因为选项是数组所以需要循环*/
             foreach($item['option'] as $optionVal) {
                 if ($optionVal === '') {
-                    return json(['msg' => '多择题第 ' . $id . ' 题选项不能为空'], 203);
+                    $status = false;
+                    return '多择题第 ' . $id . ' 题选项不能为空';
                 }
             }
 
             /*验证正确选项是否为空*/
             if(empty($item['optionTrue'])){
-                return json(['msg' => '多择题第'.$id.' 题正确选项不能为空'],203);
+                $status = false;
+                return '多择题第'.$id.' 题正确选项不能为空';
             }
 
             $data[$key]['option'] = json_encode($item['option']);
             $data[$key]['optionTrue'] = json_encode($item['optionTrue']);
         }
 
+        /*如果提交状态为false 那么停止执行*/
+        if(!$status){
+            exit();
+        }
+
+
         //批量保存数据到数据库
         $multipleModel = model('multiple');
         $result = $multipleModel->saveAll($data);
         if(!$result){
-            return json(['msg' => '多选题创建失败'],203);
+            return '多择题创建失败';
         }
-        return json(['msg' => '多择题创建成功'],200);
+        return true;
     }
+
     /*判断题*/
-    public function judgmentAdd(Request $request){
-        $data  =  $request->post();
+    public function judgmentAdd($data){
+        $status = true;
         //批量保存数据到数据库
         $judgmentModel = model('judgment');
 
@@ -285,18 +308,55 @@ class Course extends Controller
 
             /*验证标题*/
             if(empty($item['title'])){
-                return json(['msg' => '判断题第'.$id.' 题目不能为空'],203);
+                $status = false;
+                return '判断题第'.$id.' 题目不能为空';
             }
             /*验证选项*/
             if(empty($item['optionTrue'])){
-                return json(['msg' => '判断题第'.$id.' 正确选项不能为空'],203);
+                $status = false;
+                return '判断题第'.$id.' 正确选项不能为空';
             }
         }
+
+        /*如果提交状态为false 那么停止执行*/
+        if(!$status){
+            exit();
+        }
+
         $result = $judgmentModel->saveAll($data);
         if(!$result){
-            return json(['msg' => '判断题创建失败'],203);
+            return '判断题创建失败';
         }
-        return json(['msg' => '判断题创建成功'],200);
+        return true;
+    }
+
+    /*处理题目提交数据*/
+    public function questionPost(Request $request){
+        $singleData = $request->post('singleData');
+        $multipleData = $request->post('multipleData');
+        $judgmentData = $request->post('judgmentData');
+
+        /*调用singleadd方法验证并添加题目*/
+        $single = $this->singleAdd($singleData);
+        /*如果返回值为真  否则输出错误信息*/
+        if($single === true){
+
+            $multiple = $this->multipleAdd($multipleData);
+            if($multiple === true){
+                $judgment = $this->judgmentAdd($judgmentData);
+                if($judgment === true){
+                    return json(['msg' => '试卷发布成功！'],200);
+                }else{
+                    return json(['msg' => $judgment],203);
+                }
+
+            }else{
+                return json(['msg' => $multiple],203);
+            }
+
+        }else{
+            return json(['msg' => $single],203);
+        }
     }
 
     /*处理试卷事件*/

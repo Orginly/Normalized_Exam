@@ -56,6 +56,8 @@ Route::group('admin',function (){
     Route::post('singleAdd','admin/Course/singleAdd')->middleware('adminLoginCheck');
     Route::post('multipleAdd','admin/Course/multipleAdd')->middleware('adminLoginCheck');
     Route::post('judgmentAdd','admin/Course/judgmentAdd')->middleware('adminLoginCheck');
+    Route::post('questionPost','admin/Course/questionPost')->middleware('adminLoginCheck');
+
 
 
     Route::get('student','admin/Users/student')->name('admin/student')->middleware('adminLoginCheck');
