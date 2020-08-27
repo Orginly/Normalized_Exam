@@ -85,7 +85,7 @@
                         <div slot="header" class="clearfix">
                             <span class="title">管理员登陆</span>
                         </div>
-                        <div class="loginForm">
+                        <div class="loginForm" v-on:keyup.enter="loginPost">
                             <el-form status-icon ref="ruleForm" label-width="80px" class="demo-ruleForm">
                                 <el-form-item label="用户名:" style="margin-top: 0px">
                                     <el-input v-model="login.username" autocomplete="off"></el-input>
@@ -94,7 +94,7 @@
                                     <el-input type="password" v-model="login.password" autocomplete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item label="验证码：" @keyup.enter="alert('123')" style="width: 300px;display: inline-block;">
-                                    <el-input  v-model="login.captcha" @keypress.enter="loginPost()" y autocomplete="off"
+                                    <el-input  v-model="login.captcha" v-on:keyup.enter="loginPost" y autocomplete="off"
                                               style="width: 107px"></el-input>
                                 </el-form-item>
                                 <div class="vcode">

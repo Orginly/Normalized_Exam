@@ -1,76 +1,60 @@
 <link rel="stylesheet" href="/static/home/css/index.css">
 
 <!--登录弹框-->
-<el-dialog
-        title="用户登录"
-        :visible.sync="dialogLoginShow"
-        width="650px"
-        :close-on-click-modal="false"
-        :destroy-on-close="true">
-    <el-form
-            class="demo-ruleForm"
-            status-icon
-            :model="loginForm"
-            :rules="registerRules"
-            label-width="145px">
-        <el-form-item label="学号：" prop="studentId">
-            <el-input v-model="loginForm.studentId" autocomplete="on"></el-input>
-        </el-form-item>
-        <el-form-item label="密码：" prop="password">
-            <el-input v-model="loginForm.password" type="password" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="验证码："  class="vcode_input" prop="captcha">
-            <el-input v-model="loginForm.captcha"  autocomplete="off"></el-input>
-            <div class="verifycode">
-                <img src="/index/verify" @click="refreshVerify" ref="verify" alt="">
-            </div>
-        </el-form-item>
-    </el-form>
+<el-dialog title="用户登录" :visible.sync="dialogLoginShow" width="650px" :close-on-click-modal="false"
+    :destroy-on-close="true">
+    <div @keyup.enter="loginPost">
+        <el-form class="demo-ruleForm" status-icon :model="loginForm" :rules="registerRules" label-width="145px">
+            <el-form-item label="学号：" prop="studentId">
+                <el-input v-model="loginForm.studentId" autocomplete="on"></el-input>
+            </el-form-item>
+            <el-form-item label="密码：" prop="password">
+                <el-input v-model="loginForm.password" type="password" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="验证码：" class="vcode_input" prop="captcha">
+                <el-input v-model="loginForm.captcha" autocomplete="off"></el-input>
+                <div class="verifycode">
+                    <img src="/index/verify" @click="refreshVerify" ref="verify" alt="">
+                </div>
+            </el-form-item>
+        </el-form>
+    </div>
     <div slot="footer" class="dialog-footer">
         <el-button @click="dialogLoginShow = false">取 消</el-button>
         <el-button type="primary" @click="loginPost">确 定</el-button>
     </div>
 </el-dialog>
 <!--注册弹框-->
-<el-dialog
-        title="学生注册"
-        :visible.sync="dialogRegisterShow"
-        width="650px"
-        :close-on-click-modal="false"
-        :destroy-on-close="true"
->
-    <el-form
-            class="demo-ruleForm"
-            status-icon
-            label-width="145px"
-            :model="registerForm"
-            :rules="registerRules"
+<el-dialog title="学生注册" :visible.sync="dialogRegisterShow" width="650px" :close-on-click-modal="false"
+    :destroy-on-close="true">
+    <div @keyup.enter="registerPost">
+        <el-form class="demo-ruleForm" status-icon label-width="145px" :model="registerForm" :rules="registerRules"
             ref="registerRules">
-        <el-form-item label="学号：" prop="studentId">
-            <el-input v-model="registerForm.studentId"></el-input>
-        </el-form-item>
-        <el-form-item label="密码：" prop="password">
-            <el-input v-model="registerForm.password" type="password" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="确认密码：" prop="confirm_password">
-            <el-input v-model="registerForm.confirm_password" type="password" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="姓名：" prop="username">
-            <el-input v-model="registerForm.username"
-                      autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="所在学校：">
-            <el-input v-model="registerForm.edu" placeholder="广西理工职业技术学院" :disabled="true"
-                      autocomplete="off"></el-input>
-        </el-form-item>
-        </el-form-item>
-        <el-form-item label="验证码：" class="vcode_input" prop="captcha">
-            <el-input v-model="registerForm.captcha" autocomplete="off"></el-input>
-            <div class="verifycode">
-                <img src="/index/verify" ref="verify" @click="refreshVerify" alt="">
-            </div>
-        </el-form-item>
-    </el-form>
+            <el-form-item label="学号：" prop="studentId">
+                <el-input v-model="registerForm.studentId"></el-input>
+            </el-form-item>
+            <el-form-item label="密码：" prop="password">
+                <el-input v-model="registerForm.password" type="password" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码：" prop="confirm_password">
+                <el-input v-model="registerForm.confirm_password" type="password" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名：" prop="username">
+                <el-input v-model="registerForm.username" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="所在学校：">
+                <el-input v-model="registerForm.edu" placeholder="广西理工职业技术学院" :disabled="true" autocomplete="off">
+                </el-input>
+            </el-form-item>
+            </el-form-item>
+            <el-form-item label="验证码：" class="vcode_input" prop="captcha">
+                <el-input v-model="registerForm.captcha" autocomplete="off"></el-input>
+                <div class="verifycode">
+                    <img src="/index/verify" ref="verify" @click="refreshVerify" alt="">
+                </div>
+            </el-form-item>
+        </el-form>
+    </div>
     <div slot="footer" class="dialog-footer">
         <el-button @click="dialogRegisterShow = false">取 消</el-button>
         <el-button type="primary" @click="registerPost">确 定</el-button>
@@ -175,7 +159,7 @@
                     <span class="title">使用交流</span>
                 </div>
                 <div class="help_text">
-                    <span>在线考试系统</span><br/>
+                    <span>在线考试系统</span><br />
                     <span>首页：<a href="/index">localhost/index.php</a></span><br>
                     <span>后台首面：<a href="/admin/login">localhost/admin/index.php</a></span><br>
                     <span>注意事项：</span><br>
@@ -223,21 +207,21 @@
             /*注册表单验证规则*/
             registerRules: {
                 studentId: [
-                    {required: true, message: '请输入学号', trigger: 'blur'},
-                    {min: 8, max: 15, message: '学号长度为在 8 到 15 个数字', trigger: 'blur'}
+                    { required: true, message: '请输入学号', trigger: 'blur' },
+                    { min: 8, max: 15, message: '学号长度为在 8 到 15 个数字', trigger: 'blur' }
                 ],
                 password: [
-                    {required: true, message: '请输入密码', trigger: 'blur'},
-                    {min: 6, max: 32, message: '密码长度为在 6 到 32 个字符', trigger: 'blur'}
+                    { required: true, message: '请输入密码', trigger: 'blur' },
+                    { min: 6, max: 32, message: '密码长度为在 6 到 32 个字符', trigger: 'blur' }
                 ],
                 username: [
-                    {required: true, message: '请输入名字', trigger: 'blur'}
+                    { required: true, message: '请输入名字', trigger: 'blur' }
                 ],
                 confirm_password: [
-                    {required: true, message: '请重新输入密码', trigger: 'blur'},
+                    { required: true, message: '请重新输入密码', trigger: 'blur' },
                 ],
                 vcode: [
-                    {required: true, message: '请输入验证码', trigger: 'blur'},
+                    { required: true, message: '请输入验证码', trigger: 'blur' },
                 ]
             },
         },
@@ -247,7 +231,7 @@
                 axios.post('/index/login', this.loginForm)
                     .then(response => {
                         console.log(response)
-                        let {status, data} = response
+                        let { status, data } = response
                         if (status === 200) {
                             console.log(response);
                             this.dialogLoginShow = false
@@ -267,7 +251,7 @@
                 axios.post('/index/register', this.registerForm)
                     .then(response => {
                         console.log(response)
-                        let {status, data} = response
+                        let { status, data } = response
                         if (status === 200) {
                             this.$message.success('恭喜你，注册成功')
                             this.dialogRegisterShow = false
@@ -284,7 +268,7 @@
             refreshVerify() {
                 this.$refs.verify.src = 'index/verify'
             },
-            courseMsgBox(){
+            courseMsgBox() {
                 this.$confirm('你还未开通次课程, 您是否需要免费开通?', '提示', {
                     confirmButtonText: '开通',
                     cancelButtonText: '取消',
@@ -297,7 +281,7 @@
                     });
                     setTimeout(function () {
                         location.href = '/index/exam'
-                    },700)
+                    }, 700)
                 }).catch(() => {
                     this.$message({
                         type: 'info',

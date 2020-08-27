@@ -52,15 +52,18 @@ class Login extends Controller
     {
         //获取到ajax请求的数据
         $data = $request->post();
-        $data['password'] = md5(md5($data['password']));
-        $data['confirm_password'] = md5(md5($data['confirm_password']));
-        $data['createTime'] = time();
-        $data['lastTime'] = time();
+       
         //创建验证控制器
         $validate = new RegisterValidate();
         if (!$validate->check($data)) {
             return json(['msg' => $validate->getError()], 203);
         }
+
+        $data['password'] = md5(md5($data['password']));
+        $data['confirm_password'] = md5(md5($data['confirm_password']));
+        $data['createTime'] = time();
+        $data['lastTime'] = time();
+
         //新建模型
         $studentModel = model('Student');
         //查询数据库中是否存在用户

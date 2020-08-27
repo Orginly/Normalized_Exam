@@ -1,4 +1,12 @@
 <?php
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: Orginly
+ * @Date: 2020-08-19 22:02:20
+ * @LastEditors: Orginly
+ * @LastEditTime: 2020-08-27 20:03:20
+ */
 
 namespace app\home\validate;
 
