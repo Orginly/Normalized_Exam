@@ -6,13 +6,13 @@
     <div @keyup.enter="loginPost">
         <el-form class="demo-ruleForm" status-icon :model="loginForm" :rules="registerRules" label-width="145px">
             <el-form-item label="学号：" prop="studentId">
-                <el-input v-model="loginForm.studentId" autocomplete="on"></el-input>
+                <el-input v-model.trim="loginForm.studentId" autocomplete="on"></el-input>
             </el-form-item>
             <el-form-item label="密码：" prop="password">
-                <el-input v-model="loginForm.password" type="password" autocomplete="off"></el-input>
+                <el-input v-model.trim="loginForm.password" type="password" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="验证码：" class="vcode_input" prop="captcha">
-                <el-input v-model="loginForm.captcha" autocomplete="off"></el-input>
+                <el-input v-model.trim="loginForm.captcha" autocomplete="off"></el-input>
                 <div class="verifycode">
                     <img src="/index/verify" @click="refreshVerify" ref="verify" alt="">
                 </div>
@@ -31,16 +31,16 @@
         <el-form class="demo-ruleForm" status-icon label-width="145px" :model="registerForm" :rules="registerRules"
             ref="registerRules">
             <el-form-item label="学号：" prop="studentId">
-                <el-input v-model="registerForm.studentId"></el-input>
+                <el-input v-model.trim="registerForm.studentId"></el-input>
             </el-form-item>
             <el-form-item label="密码：" prop="password">
-                <el-input v-model="registerForm.password" type="password" autocomplete="off"></el-input>
+                <el-input v-model.trim="registerForm.password" type="password" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="确认密码：" prop="confirm_password">
-                <el-input v-model="registerForm.confirm_password" type="password" autocomplete="off"></el-input>
+                <el-input v-model.trim="registerForm.confirm_password" type="password" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="姓名：" prop="username">
-                <el-input v-model="registerForm.username" autocomplete="off"></el-input>
+                <el-input v-model.trim="registerForm.username" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="所在学校：">
                 <el-input v-model="registerForm.edu" placeholder="广西理工职业技术学院" :disabled="true" autocomplete="off">
@@ -48,7 +48,7 @@
             </el-form-item>
             </el-form-item>
             <el-form-item label="验证码：" class="vcode_input" prop="captcha">
-                <el-input v-model="registerForm.captcha" autocomplete="off"></el-input>
+                <el-input v-model.trim="registerForm.captcha" autocomplete="off"></el-input>
                 <div class="verifycode">
                     <img src="/index/verify" ref="verify" @click="refreshVerify" alt="">
                 </div>
