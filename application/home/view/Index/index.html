@@ -2,7 +2,7 @@
 
 <!--登录弹框-->
 <el-dialog title="用户登录" :visible.sync="dialogLoginShow" width="650px" :close-on-click-modal="false"
-    :destroy-on-close="true">
+    :destroy-on-close="true" style="display: none;">
     <div @keyup.enter="loginPost">
         <el-form class="demo-ruleForm" status-icon :model="loginForm" :rules="registerRules" label-width="145px">
             <el-form-item label="学号：" prop="studentId">
@@ -26,7 +26,7 @@
 </el-dialog>
 <!--注册弹框-->
 <el-dialog title="学生注册" :visible.sync="dialogRegisterShow" width="650px" :close-on-click-modal="false"
-    :destroy-on-close="true">
+    :destroy-on-close="true" style="display: none;">
     <div @keyup.enter="registerPost">
         <el-form class="demo-ruleForm" status-icon label-width="145px" :model="registerForm" :rules="registerRules"
             ref="registerRules">
@@ -71,9 +71,6 @@
             <div class="content">
                 <el-card :body-style="{ padding: '0' }">
                     <el-carousel :interval="5000" arrow="always">
-                        <el-carousel-item>
-                            <img src="/static/home/images/banner1.jpg" width="949" height="300" alt="">
-                        </el-carousel-item>
                         <el-carousel-item>
                             <img src="/static/home/images/banner2.jpg" width="949" height="300" alt="">
                         </el-carousel-item>
@@ -156,15 +153,10 @@
             <!--使用交流-->
             <el-card class="box-card help">
                 <div slot="header" class="clearfix">
-                    <span class="title">使用交流</span>
+                    <span class="title">每日一句</span>
                 </div>
                 <div class="help_text">
-                    <span>在线考试系统</span><br />
-                    <span>首页：<a href="/index">localhost/index.php</a></span><br>
-                    <span>后台首面：<a href="/admin/login">localhost/admin/index.php</a></span><br>
-                    <span>注意事项：</span><br>
-                    <span>1、首次打开需要将exam.sql文件导入到MySql数据库</span><br>
-                    <span>2、修改/inc/database.php文件中的数据库配置</span><br>
+                    <p style="text-indent: 2em;">只要你有能力去做的事就一定要去做，不要给自己留下任何遗憾，人生最重要的不是所站的位置，而是所朝的方向。</p>
                 </div>
 
             </el-card>
